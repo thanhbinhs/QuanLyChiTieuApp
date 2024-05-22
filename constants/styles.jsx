@@ -18,7 +18,27 @@ const useStyles = () =>{
             width:24,
             height:24,
             color:'#999',
+        },
+        paddingBox:{
+            padding:SIZES.padding,
+        },
+        borderBottom:{
+            width:'100%',
+            height:1,
+            backgroundColor:'#ccc',
+        },
+
+        flexRowBetween:{
+            flexDirection:'row',
+            justifyContent:'space-between',
+            alignItems:'center',
+        },
+
+        imageMini:{
+            width:30,
+            height:30,
         }
+
     })
 }
 
