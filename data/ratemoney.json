@@ -1,0 +1,22 @@
+[{
+        "id": "1",
+        "code": "USD",
+        "unit": "$",
+        "flag": "../assets/images/country/united-states.png",
+        "rate": 23000
+    },
+    {
+        "id": "2",
+        "code": "EUR",
+        "unit": "€",
+        "flag": "../assets/images/country/united-kingdom.png",
+        "rate": 27000
+    },
+    {
+        "id": "3",
+        "code": "VGO",
+        "unit": "chỉ",
+        "flag": "../assets/images/country/vietnam.png",
+        "rate": 9050000
+    }
+]

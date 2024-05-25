@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "987834799919",
+    "project_id": "quanlychitieuapp",
+    "storage_bucket": "quanlychitieuapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:987834799919:android:df442fed41dcd2940bb3da",
+        "android_client_info": {
+          "package_name": "com.examle.quanlychitieu"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgYNJQADHU9yXVpCESMtiBRJmbrx4Myn4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
