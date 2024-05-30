@@ -3,26 +3,31 @@ import React from "react";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants/theme";
 import PropTypes from "prop-types";
+import { useTotal } from "../context/TotalContext";
 
 export default function ExpenseAIncome({ listings }) {
+  const {_, income, expense} = useTotal();
+  total = income - expense;
   let heightIncome, heightExpense;
-  if (listings.income === Math.max(listings.income, listings.expense)) {
+  if (income === Math.max(income, expense)) {
     heightIncome = 120;
-    heightExpense = 120 * (listings.expense / listings.income);
+    heightExpense = 120 * (expense / income);
   } else {
     heightExpense = 120;
-    heightIncome = 120 * (listings.income / listings.expense);
+    heightIncome = 120 * (income / expense);
   }
-  if (listings.income === listings.expense) {
+  if (income === expense) {
     heightIncome = 120;
     heightExpense = 120;
   }
-  if (listings.income === 0 || listings.income < listings.expense/50) {
+  if (income === 0 || income < expense/50) {
     heightIncome = 1;
   }
-  if (listings.expense === 0 || listings.expense < listings.income/50) {
+  if (expense === 0 || expense < income/50) {
     heightExpense = 1;
   }
+
+
 
   const FinanceInfo = ({ name, color, finance }) => (
     <View style={{ flexDirection: "row",  paddingVertical:10,justifyContent: "space-between"}}>
@@ -110,18 +115,18 @@ export default function ExpenseAIncome({ listings }) {
           <FinanceInfo
             name="Thu"
             color={COLORS.green}
-            finance={listings.income}
+            finance={income}
           />
           <FinanceInfo
             name="Chi"
             color={COLORS.red}
-            finance={listings.expense}
+            finance={expense}
           />
           <View style={{height:1, width:'100%', backgroundColor:'#ccc'}}></View>
           <FinanceInfo
             name="Tổng"
             color={COLORS.text}
-            finance={listings.income - listings.expense}
+            finance={total}
           />
         </View>
       </View>

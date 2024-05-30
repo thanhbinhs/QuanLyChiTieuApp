@@ -9,7 +9,7 @@ const Footer = ({navigation}) => {
   const [menuItems, setMenuItems] = useState(menuItem);
 
   const handlePress = (clickedItem) => {
-    const updatedItems = menuItems.map((item) => ({
+    const updatedItems = menuItems.map((item, index) => ({
       ...item,
       node: item === clickedItem ? true : false,
     }));

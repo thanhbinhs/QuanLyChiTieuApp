@@ -4,6 +4,7 @@ import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { COLORS, SIZES } from "../constants/theme";
 import rateData from "../data/ratemoney.json"
 import PropTypes from "prop-types";
+import {countrys} from "../constants";
 
 export default function RateTables() {
     const lengthData = rateData.length;
@@ -17,7 +18,7 @@ export default function RateTables() {
             </View>
             <View style={{paddingHorizontal:20,flex:1, flexDirection:'row', alignItems:'center', justifyContent:'space-between'}}>
               <Text style={{fontSize:SIZES.body3}}>1 {item.code} ~ {item.rate.toLocaleString('en-US')} ₫ </Text>
-              <Image source={{url:item.flag}} style={styles.image}></Image>
+              <Image source={countrys[item.flag]} style={styles.image}></Image>
             </View> 
           </View>
         )

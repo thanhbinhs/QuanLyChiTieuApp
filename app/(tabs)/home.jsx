@@ -1,18 +1,21 @@
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import React, { useState } from "react";
 import { Stack } from "expo-router";
-import { useHeaderHeight } from "@react-navigation/elements";
+import { useRoute } from "@react-navigation/native";
 import { COLORS, SIZES } from "../../constants/theme";
 import { Ionicons } from "@expo/vector-icons";
 import SizedBox from "../../components/SizedBox";
 import userData from "../../data/user.json"
 import ExpenseAIncome from "../../components/ExpenseAIncome";
 import RateTables from "../../components/RateTables";
+import {balanceUser} from "../../constants/functions"
+import { useTotal } from "../../context/TotalContext";
 
 export default function Home() {
-  const headerHeight = useHeaderHeight();
   const [isshow, setIsshow] = useState(false);
-  const money = userData[0].income - userData[0].expense;
+  const {total, income, expense} = useTotal()
+
+
 
   return (
     <>
@@ -25,7 +28,7 @@ export default function Home() {
       <View style={styles.header}>
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <Text style={styles.headerTitle}>Hello Group Two</Text>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={() => { }}>
             <Ionicons name="notifications" size={24} color={COLORS.white} />
           </TouchableOpacity>
         </View>
@@ -41,18 +44,18 @@ export default function Home() {
               <Text style={{ fontSize: 14, color: "#999" }}>Tổng số dư</Text>
               <Ionicons name="chevron-forward" size={20} color="#999" />
             </View>
-            {money < 0 ? (
-              
+            {total < 0 ? (
+
               <Text
                 style={{ color: COLORS.red, fontSize: 28, fontWeight: "700" }}
               >
-                {isshow ? "***000" :  "-" + Math.abs(money).toLocaleString('en-US')} VND
+                {isshow ? "***000" : "-" + Math.abs(total).toLocaleString('en-US')} VND
               </Text>
             ) : (
               <Text
                 style={{ color: COLORS.green, fontSize: 28, fontWeight: "700" }}
               >
-                {isshow ? "***000" : "+" + money.toLocaleString('en-US')} VND
+                {isshow ? "***000" : "+" + total.toLocaleString('en-US')} VND
               </Text>
             )}
           </View>
@@ -69,10 +72,10 @@ export default function Home() {
           </TouchableOpacity>
         </View>
       </View>
-      <SizedBox/>
-      <ExpenseAIncome listings={userData[0]}/>
-      <SizedBox/>
-      <RateTables/>
+      <SizedBox />
+      <ExpenseAIncome listings={userData[0]} />
+      <SizedBox />
+      <RateTables />
     </>
   );
 }

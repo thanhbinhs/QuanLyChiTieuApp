@@ -1,10 +1,27 @@
-import { View, Text } from "react-native";
-import React from "react";
+import { View, Text, Animated } from "react-native";
+import React, {useRef} from "react";
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../../constants/theme";
 
 export default function Layout() {
+
+  const scaleValue = useRef(new Animated.Value(1)).current;
+
+  const onPressIn = () => {
+    Animated.spring(scaleValue, {
+      toValue: 0.95, // Zoom out
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const onPressOut = () => {
+    Animated.spring(scaleValue, {
+      toValue: 1, // Zoom in back to normal size
+      friction: 3,
+      useNativeDriver: true,
+    }).start();
+  };
   return (
     <Tabs
       screenOptions={({ route }) => ({
@@ -36,7 +53,7 @@ export default function Layout() {
               </View>
             );
 
-          return <Ionicons name={iconName} size={32} color={color} />;
+          return <Ionicons name={iconName} size={32} color={color} onPressIn={onPressIn} onPressOut={onPressOut} />;
         },
         tabBarInactiveTintColor: "gray",
         tabBarActiveTintColor: COLORS.primary,
@@ -45,6 +62,10 @@ export default function Layout() {
           position: "relative",
         },
         tabBarShowLabel: false,
+        tabBarVisibilityAnimationConfig: {
+          duration: 2000,
+          easing: "ease-in-out",
+        },
       })}
     >
       <Tabs.Screen name="home" />
