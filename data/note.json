@@ -1,9 +1,35 @@
-[
-    {
+[{
         "noteId": "e1f2g3h4-i5j6-7k8l-9m0n-opqrstuvwxyz",
         "noteName": "Mua bữa trưa",
         "noteType": "Chi",
         "noteMoney": 200000.00,
+        "categoryId": "c1d2e3f4-g5h6-7i8j-9k0l-mnopqrstuvwx",
+        "accountId": "a1b2c3d4-e5f6-7g8h-9i0j-klmnopqrstuv",
+        "userId": "1a2b3c4d-5678-9101-1121-314151617181"
+    },
+    {
+        "noteId": "e1f2g3h4-i5j6-7k8l-9m0n-oparstuvwxyz",
+        "noteName": "Mua bữa trưa",
+        "noteType": "Chi",
+        "noteMoney": 100000.00,
+        "categoryId": "c1d2e3f4-g5h6-7i8j-9k0l-mnopqrstuvwx",
+        "accountId": "a1b2c3d4-e5f6-7g8h-9i0j-klmnopqrstuv",
+        "userId": "1a2b3c4d-5678-9101-1121-314151617181"
+    },
+    {
+        "noteId": "e1f2g3h4-i5j6-7k8l-9m0n-aparstuvwxyz",
+        "noteName": "Mua sắm",
+        "noteType": "Chi",
+        "noteMoney": 100000.00,
+        "categoryId": "c1d2e3f4-g5h6-7i8j-9k0l-mnopqrstuvwx",
+        "accountId": "a1b2c3d4-e5f6-7g8h-9i0j-klmnopqrstuv",
+        "userId": "1a2b3c4d-5678-9101-1121-314151617181"
+    },
+    {
+        "noteId": "e1f2g3h4-i5j6-7k8l-9m03-aparstuvwxyz",
+        "noteName": "Y tế",
+        "noteType": "Chi",
+        "noteMoney": 1000321.00,
         "categoryId": "c1d2e3f4-g5h6-7i8j-9k0l-mnopqrstuvwx",
         "accountId": "a1b2c3d4-e5f6-7g8h-9i0j-klmnopqrstuv",
         "userId": "1a2b3c4d-5678-9101-1121-314151617181"
@@ -19,7 +45,7 @@
     },
     {
         "noteId": "f2g3h4i5-j6k7-8l9m-0n1o-pqrstuvwxyz01",
-        "noteName": "Nhận lương tháng 5",
+        "noteName": "Nhận lương tháng 6",
         "noteType": "Thu",
         "noteMoney": 10000000.00,
         "categoryId": "d2e3f4g5-h6i7-8j9k-0l1m-nopqrstuvxyz",

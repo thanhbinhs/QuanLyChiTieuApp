@@ -13,6 +13,7 @@ import { useTotal } from '../../context/TotalContext';
 import SizedBox from '../../components/SizedBox';
 import ViewAccounts from '../../components/ViewAccounts';
 import Modal from 'react-native-modal';
+import BalanceInput from '../../components/BalanceInput';
 
 export default function Add() {
   const headerHeight = useHeaderHeight();
@@ -68,7 +69,7 @@ export default function Add() {
         }} />
 
       <ScrollView style={{paddingTop:headerHeight}}>
-        <TextInput placeholder="Nhập số tiền" style={{ padding: 10, margin: 10, borderColor: COLORS.grey, borderWidth: 1, borderRadius: 5 }} />
+        <BalanceInput />
         </ScrollView>
     </>
   )

@@ -1,5 +1,4 @@
-[
-    {
+[{
         "accountId": "a1b2c3d4-e5f6-7g8h-9i0j-klmnopqrstuv",
         "accountName": "Ví tiền mặt",
         "accountType": "Tiền mặt",
@@ -12,12 +11,23 @@
     },
     {
         "accountId": "a1b2c3d4-e5f6-7g8h-9i0j-fdfsdfsdfd",
-        "accountName": "Tài khoản ngân hàng Vietcombank",
+        "accountName": "Techcombank",
         "accountType": "Tài khoản ngân hàng",
-        "accountImage": "vcb",
+        "accountImage": "tcb",
         "userId": "1a2b3c4d-5678-9101-1121-314151617181",
         "balanceBegin": 0,
         "balance": 20345,
+        "income": 0,
+        "expense": 0
+    },
+    {
+        "accountId": "a1b2c3d4-e5f6-7g8h-9i0j-fdfsdfsdfd1",
+        "accountName": "Vietinbank - Chi thu",
+        "accountType": "Tài khoản ngân hàng",
+        "accountImage": "vietinbank",
+        "userId": "1a2b3c4d-5678-9101-1121-314151617181",
+        "balanceBegin": 0,
+        "balance": 2034500,
         "income": 0,
         "expense": 0
     },
@@ -27,6 +37,18 @@
         "accountName": "Tài khoản ngân hàng BIDV",
         "accountType": "Tài khoản ngân hàng",
         "accountImage": "bidv",
+        "userId": "1a2b3c4d-5678-9101-1121-314151617181",
+        "balanceBegin": 0,
+        "balance": 20345444,
+        "income": 0,
+        "expense": 0
+    },
+    {
+
+        "accountId": "a1b2c3d4-e5f6-7g8h-9i0j-fdaddsdeedfd",
+        "accountName": "Tài khoản ngân hàng MBB",
+        "accountType": "Tài khoản ngân hàng",
+        "accountImage": "mbb",
         "userId": "1a2b3c4d-5678-9101-1121-314151617181",
         "balanceBegin": 0,
         "balance": 20345444,
