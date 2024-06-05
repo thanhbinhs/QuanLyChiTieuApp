@@ -1,0 +1,51 @@
+[{
+        "id": "1",
+        "name": "Mua bữa trưa",
+        "type": "Chi"
+    },
+    {
+        "id": "2",
+        "name": "Mua bữa sáng",
+        "type": "Chi"
+    },
+    {
+        "id": "3",
+        "name": "Mua bữa tối",
+        "type": "Chi"
+    },
+    {
+        "id": "4",
+        "name": "Mua đồ uống",
+        "type": "Chi"
+    },
+    {
+        "id": "5",
+        "name": "Thanh toán tiền điện",
+        "type": "Chi"
+    },
+    {
+        "id": "6",
+        "name": "Thanh toán tiền nước",
+        "type": "Chi"
+    },
+    {
+        "id": "7",
+        "name": "Nhận lương",
+        "type": "Thu"
+    },
+    {
+        "id": "8",
+        "name": "Bán hàng online",
+        "type": "Thu"
+    },
+    {
+        "id": "9",
+        "name": "Nhận tiền thưởng",
+        "type": "Thu"
+    },
+    {
+        "id": "10",
+        "name": "Nhận tiền từ khách hàng",
+        "type": "Thu"
+    }
+]
