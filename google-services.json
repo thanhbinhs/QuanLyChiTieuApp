@@ -12,7 +12,12 @@
           "package_name": "com.examle.quanlychitieu"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "987834799919-r1rcdqodfkdkirkdoanp30n4t5cr1pf4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBgYNJQADHU9yXVpCESMtiBRJmbrx4Myn4"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "987834799919-r1rcdqodfkdkirkdoanp30n4t5cr1pf4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "987834799919-7t485ala3tccosstgrbacuns4c5t09e3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.quanlychitieu"
+              }
+            }
+          ]
         }
       }
     }
