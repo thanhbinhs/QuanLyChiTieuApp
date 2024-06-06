@@ -9,11 +9,10 @@ import Modal from 'react-native-modal';
 import BalanceInput from '../components/BalanceInput';
 import TypeChooses from '../components/TypeChooses';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createStackNavigator } from '@react-navigation/stack';
 import { doc, setDoc,getDoc,getDocs, collection, updateDoc } from 'firebase/firestore';
 import { FIRESTORE_DB, FIREBASE_AUTH } from '../components/FirebaseConfig';
 import { useChange } from '../context/ChangeContext';
-import { useFetchData } from '../hooks/useFetchData';
+import SubmitButton from '../components/SubmitButton';
 
 
 
@@ -28,8 +27,6 @@ export default function AddScreen() {
   
     const [data, setData] = useState(true);
     console.log("AddScreen");
-
-    const { userData, noteData, accountData, loading, error } = useFetchData(change);
 
 
   
@@ -77,7 +74,8 @@ export default function AddScreen() {
             const accountDocRef = doc(FIRESTORE_DB, `users/${userDocId}/account/${account}`)
             const accountData = await getDoc(accountDocRef);
             const newBalance = accountData.data().balance - number;
-            await updateDoc(accountDocRef, {balance: newBalance, expense: accountData.data().expense + number});
+            const newExpense = accountData.data().expense + number;
+            await updateDoc(accountDocRef, {balance: newBalance, expense: newExpense});
             console.log("Update success Chi tien");
         }else if(type === "Thu tiền"){
           const userDocRef = doc(FIRESTORE_DB, `users/${userDocId}`)
@@ -86,7 +84,8 @@ export default function AddScreen() {
             const accountDocRef = doc(FIRESTORE_DB, `users/${userDocId}/account/${account}`)
             const accountData = await getDoc(accountDocRef);
             const newBalance = accountData.data().balance + number;
-            await updateDoc(accountDocRef, {balance: newBalance, income: accountData.data().income + number});
+            const newIncome = accountData.data().income + number;
+            await updateDoc(accountDocRef, {balance: newBalance, income: newIncome});
             console.log("Update success Thu tien");
         }
         setData(true);
@@ -133,12 +132,12 @@ export default function AddScreen() {
               <SizedBox/>
               <TypeChooses type={type} onItemChange={handleTypeNoteChange} data="type"/>
               <TypeChooses type={type} onItemChange={handleAccountChange} data="account"/>
-              <TouchableOpacity style={{alignItems:'center'}} onPress={handleSubmit} >
+              <SubmitButton handleSubmit={handleSubmit} />
+              {/* <TouchableOpacity style={{alignItems:'center'}} onPress={handleSubmit} >
                 <View style={{width:'90%', height:50, backgroundColor:COLORS.primary, justifyContent:'center', alignItems:'center', borderRadius:10}}> 
                   <Text style={{fontSize:24, color:COLORS.white}}>Ghi</Text>
                 </View>
-      
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               </ScrollView> 
       ):(
         <View style={{justifyContent:'center', alignItems:'center'}}>

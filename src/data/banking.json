@@ -1,0 +1,89 @@
+[{
+    "id": 1,
+    "bank": "BIDV",
+    "image": "bidv"
+}, {
+    "id": 2,
+    "bank": "Vietcombank",
+    "image": "vcb"
+}, {
+    "id": 3,
+    "bank": "Vietinbank",
+    "image": "vietinbank"
+}, {
+    "id": 4,
+    "bank": "Agribank",
+    "image": "agribank"
+}, {
+    "id": 5,
+    "bank": "Sacombank",
+    "image": "sacombank"
+}, {
+    "id": 6,
+    "bank": "Techcombank",
+    "image": "tcb"
+}, {
+    "id": 7,
+    "bank": "VPBank",
+    "image": "vpb"
+}, {
+    "id": 8,
+    "bank": "ACB",
+    "image": "acb"
+}, {
+    "id": 9,
+    "bank": "MBBank",
+    "image": "mbb"
+}, {
+    "id": 10,
+    "bank": "SHB",
+    "image": "shb"
+}, {
+    "id": 11,
+    "bank": "TPBank",
+    "image": "tpb"
+}, {
+    "id": 12,
+    "bank": "VIB",
+    "image": "vib"
+}, {
+    "id": 13,
+    "bank": "BacABank",
+    "image": "bacabank"
+}, {
+    "id": 14,
+    "bank": "Eximbank",
+    "image": "eximbank"
+}, {
+    "id": 15,
+    "bank": "HDBank",
+    "image": "hdbank"
+}, {
+    "id": 16,
+    "bank": "OceanBank",
+    "image": "oceanbank"
+}, {
+    "id": 17,
+    "bank": "PVcomBank",
+    "image": "pvcombank"
+}, {
+    "id": 18,
+    "bank": "VietABank",
+    "image": "vietabank"
+}, {
+    "id": 19,
+    "bank": "VietBank",
+    "image": "vietbank"
+}, {
+    "id": 20,
+    "bank": "BaoVietBank",
+    "image": "baovietbank"
+}, {
+    "id": 21,
+    "bank": "BVB",
+    "image": "bvb"
+}, {
+    "id": 22,
+    "bank": "GPBank",
+    "image": "gpbank"
+}]

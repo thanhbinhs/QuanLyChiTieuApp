@@ -8,17 +8,19 @@ import {
   SafeAreaView,
   TouchableOpacity,
 } from "react-native";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { FIREBASE_AUTH } from "../../components/FirebaseConfig";
+import {  signInWithEmailAndPassword, OAuthProvider, signInWithCredential  } from "firebase/auth";
+import { FIREBASE_AUTH, FIRESTORE_DB } from "../../components/FirebaseConfig";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../../constants";
+import * as AppleAuthentication from 'expo-apple-authentication';
 
 const SignInScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isshowPass, setIsShowPass] = useState(false);
+
 
   const handleSignIn = async () => {
     try {
@@ -33,6 +35,39 @@ const SignInScreen = ({ navigation }) => {
       setError(error.message);
     }
   };
+
+  const loginWithApple = async () => {
+    try {
+      const credential = await AppleAuthentication.signInAsync({
+        requestedScopes: [
+          AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+          AppleAuthentication.AppleAuthenticationScope.EMAIL,
+        ],
+      });
+  
+      const { identityToken, email, fullName } = credential;
+      const provider = new OAuthProvider('apple.com');
+      const appleCredential = provider.credential({ idToken: identityToken });
+  
+      await signInWithCredential(FIREBASE_AUTH, appleCredential);
+      const user = FIREBASE_AUTH.currentUser;
+      const userDoc = FIRESTORE_DB.collection("users").doc(user.uid);
+      const userDocSnap = await userDoc.get();
+  
+      if (!userDocSnap.exists) {
+        await userDoc.set({
+          email: email,
+          fullName: fullName,
+          role: "user",
+          createdAt: new Date(),
+        });
+      }
+  
+      navigation.navigate("Main");
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <>
@@ -95,7 +130,7 @@ const SignInScreen = ({ navigation }) => {
             <Text style={{color:COLORS.white, fontSize:16}}>ĐĂNG NHẬP</Text>
           </TouchableOpacity>
           <View style={{ flexDirection: "row", paddingLeft:36,  alignItems:'center' }}>
-            <Text>Không có tài khoản?</Text>
+            <Text>Chưa có tài khoản?</Text>
             <Button
               title="ĐĂNG KÝ"
               style={{ color: COLORS.primary }}
@@ -104,6 +139,7 @@ const SignInScreen = ({ navigation }) => {
           </View>
           <TouchableOpacity
             style={[styles.button, { backgroundColor:COLORS.black }]}
+            onPress={loginWithApple}
           >
             <Ionicons
               name="logo-apple"
@@ -116,7 +152,7 @@ const SignInScreen = ({ navigation }) => {
               }}
             />
             <Text style={{ color:COLORS.white }}>
-              Đăng ký bằng APPLE
+              Đăng nhập bằng APPLE
             </Text>
           </TouchableOpacity>
 
@@ -134,7 +170,7 @@ const SignInScreen = ({ navigation }) => {
               }}
             />
             <Text style={{ textAlign: "center"}}>
-              Đăng ký bằng GOOGLE
+              Đăng nhập bằng GOOGLE
             </Text>
           </TouchableOpacity>
         </View>

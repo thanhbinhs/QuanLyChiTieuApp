@@ -19,11 +19,17 @@ import SettingScreen from "./src/screens/SettingScreen";
 import ReportScreen from "./src/screens/ReportScreen";
 import WelcomeScreen from "./src/screens/authScreens/WelcomeScreen";
 import ForgotPasswordScreen from "./src/screens/authScreens/ForgotPasswordScreen";
+import HistoryScreen from "./src/screens/Home/HistoryScreen";
+import LoadingScreen from "./src/screens/LoadingScreen";
+import AddAccountScreen from "./src/screens/Account/AddAccountScreen";
+import SelectTypeAccScreen from "./src/screens/Account/SelectTypeAccScreen";
+import SelectBankScreen from "./src/screens/Account/SelectBankScreen";
+import SelectDateScreen from "./src/screens/Home/SelectDateScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { COLORS } from "./src/constants";
-import { Ionicons } from "@expo/vector-icons";
+import { Entypo, Ionicons } from "@expo/vector-icons";
 import { useFetchData } from './src/hooks/useFetchData';
 import { useChange } from "./src/context/ChangeContext";
 
@@ -37,13 +43,76 @@ const AccountStack = createStackNavigator();
 const SettingStack = createStackNavigator();
 const ReportStack = createStackNavigator();
 
-function HomeStackScreen() {
+function HomeStackScreen({navigation}) {
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen
         name="Home"
         component={HomeScreen}
         options={{ headerShown: false }}
+      />
+      <HomeStack.Screen
+        name="History"
+        component={HistoryScreen}
+        options={{
+          headerTitle: "Lịch sử ghi chép",
+          headerTransparent: true,
+          headerTitleStyle: {
+            color: COLORS.white,
+            fontSize: 20,
+            fontWeight: "bold",
+          },
+          headerTitleAlign: "center",
+          headerBackground: () => (
+            <>
+              <View
+                style={{
+                  backgroundColor: COLORS.primary,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  paddingTop: 100,
+                }}
+              ></View>
+            </>
+          ),
+          headerLeft: () => (
+            <TouchableOpacity style={{ paddingLeft: 15 }} onPress={()=> navigation.navigate("Home")}>
+              <Entypo name="chevron-left" size={28} color={COLORS.white} />
+            </TouchableOpacity>
+          ),
+        
+        }}
+      />
+      <HomeStack.Screen
+        name="SelectDate"
+        component={SelectDateScreen}
+        options={{
+          headerTitle: "Chọn thời gian",
+          headerTransparent: true,
+          headerTitleStyle: {
+            color: COLORS.white,
+            fontSize: 20,
+            fontWeight: "bold",
+          },
+          headerTitleAlign: "center",
+          headerBackground: () => (
+            <>
+              <View
+                style={{
+                  backgroundColor: COLORS.primary,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  paddingTop: 100,
+                }}
+              ></View>
+            </>
+          ),
+          headerLeft: () => (
+            <TouchableOpacity style={{ paddingLeft: 15 }} onPress={()=> navigation.navigate("History")}>
+              <Entypo name="chevron-left" size={28} color={COLORS.white} />
+            </TouchableOpacity>
+          ),
+        }}
       />
     </HomeStack.Navigator>
   );
@@ -61,7 +130,7 @@ function AddStackScreen() {
   );
 }
 
-function AccountStackScreen() {
+function AccountStackScreen({navigation}) {
   const headerHeight = useHeaderHeight();
   return (
     <AccountStack.Navigator>
@@ -98,6 +167,111 @@ function AccountStackScreen() {
           headerRight: () => (
             <TouchableOpacity style={{ paddingRight: 15 }}>
               <Ionicons name="filter" size={24} color={COLORS.white} />
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <AccountStack.Screen
+        name="AddAccount"
+        component={AddAccountScreen}
+        options={{
+          // headerShown: false,
+          headerTitle: "Thêm tài khoản",
+          headerTransparent: true,
+          headerTitleStyle: {
+            color: COLORS.white,
+            fontSize: 20,
+            fontWeight: "bold",
+          },
+          headerTitleAlign: "center",
+          headerBackground: () => (
+            <>
+              <View
+                style={{
+                  backgroundColor: COLORS.primary,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  paddingTop: 100,
+                }}
+              ></View>
+            </>
+          ),
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Account")}
+              style={{ paddingLeft: 15 }}
+            >
+              <Entypo name="chevron-left" size={28} color={COLORS.white} />
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <AccountStack.Screen
+        name="SelectTypeAcc"
+        component={SelectTypeAccScreen}
+        options={{
+          // headerShown: false,
+          headerTitle: "Chọn loại tài khoản",
+          headerTransparent: true,
+          headerTitleStyle: {
+            color: COLORS.white,
+            fontSize: 20,
+            fontWeight: "bold",
+          },
+          headerTitleAlign: "center",
+          headerBackground: () => (
+            <>
+              <View
+                style={{
+                  backgroundColor: COLORS.primary,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  paddingTop: 100,
+                }}
+              ></View>
+            </>
+          ),
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.navigate("AddAccount")}
+              style={{ paddingLeft: 15 }}
+            >
+              <Entypo name="chevron-left" size={28} color={COLORS.white} />
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <AccountStack.Screen
+        name="SelectBank"
+        component={SelectBankScreen}
+        options={{
+          // headerShown: false,
+          headerTitle: "Chọn ngân hàng",
+          headerTransparent: true,
+          headerTitleStyle: {
+            color: COLORS.white,
+            fontSize: 20,
+            fontWeight: "bold",
+          },
+          headerTitleAlign: "center",
+          headerBackground: () => (
+            <>
+              <View
+                style={{
+                  backgroundColor: COLORS.primary,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  paddingTop: 100,
+                }}
+              ></View>
+            </>
+          ),
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.navigate("SelectTypeAcc")}
+              style={{ paddingLeft: 15 }}
+            >
+              <Entypo name="chevron-left" size={28} color={COLORS.white} />
             </TouchableOpacity>
           ),
         }}
@@ -275,6 +449,8 @@ const MainTabScreen = () => {
   );
 };
 
+
+
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [userDocId, setUserDocId] = useState(null);
@@ -301,10 +477,11 @@ export default function App() {
   return (
     <Providers>
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={userDocId ?? "SignIn"}>
+      <Stack.Navigator initialRouteName="Loading">
+        <Stack.Screen name="Loading" component={LoadingScreen} options={{headerShown:false}}/>
+        <Stack.Screen name="Welcome" component={WelcomeScreen} options={{headerShown:false}}/>
         <Stack.Screen name="SignIn" component={SignInScreen} options={{headerShown:false}}/>
         <Stack.Screen name="SignUp" component={SignUpScreen} options={{headerShown:false}}/>
-        <Stack.Screen name="Welcome" component={WelcomeScreen} options={{headerShown:false}}/>
         <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{headerShown:false}}/>
         <Stack.Screen
           name="Main"
@@ -315,4 +492,5 @@ export default function App() {
     </NavigationContainer>
     </Providers>
   );
+
 }

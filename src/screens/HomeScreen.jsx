@@ -10,7 +10,7 @@ import RateTables from '../components/RateTables';
 import { useChange } from '../context/ChangeContext';
 import { useFetchData } from '../hooks/useFetchData';
 
-const HomeScreen = () => {
+const HomeScreen = ({navigation}) => {
     const [isshow, setIsshow] = useState(false);
     const { change, setChange } = useChange();
     console.log("HomeScreen");
@@ -20,7 +20,7 @@ const HomeScreen = () => {
     return (
       <>
         {
-          userData ? (
+          userData && noteData ? (
             <>
             <View style={styles.header}>
               <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
@@ -56,14 +56,17 @@ const HomeScreen = () => {
             </View>
             <SizedBox />
                   <ScrollView>
-              <ExpenseAIncome listing={noteData} />
+              <ExpenseAIncome listing={noteData} navigation={navigation} />
 
             <SizedBox />
             <RateTables />
             </ScrollView>
             </>
           ) : (
-            <ActivityIndicator size="large" color={COLORS.primary} />
+            <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
+
+              <ActivityIndicator size="large" color={COLORS.primary} />
+            </View>
           )
           
         }

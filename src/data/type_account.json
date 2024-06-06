@@ -1,0 +1,20 @@
+[{
+        "id": 1,
+        "image": "wallet",
+        "name": "Tiền mặt"
+    }, {
+        "id": 2,
+        "image": "bank",
+        "name": "Tài khoản ngân hàng"
+    }, {
+        "id": 3,
+        "image": "ewallet",
+        "name": "Ví điện tử"
+
+    },
+    {
+        "id": 4,
+        "image": "credit",
+        "name": "Thẻ tín dụng"
+    }
+]

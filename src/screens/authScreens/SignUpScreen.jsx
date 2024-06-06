@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, TextInput, Button, Text, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
-import { createUserWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
+import { connectAuthEmulator, createUserWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
 import { FIREBASE_AUTH,FIRESTORE_DB } from '../../components/FirebaseConfig';
-import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
+import { addDoc, collection, connectFirestoreEmulator, doc, setDoc } from 'firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { COLORS } from '../../constants';
 import { Ionicons } from '@expo/vector-icons';
@@ -15,13 +15,13 @@ const SignupScreen = ({ navigation }) => {
     const [user, setUser] = useState(null); // Track user authentication state
     const [isshowPass, setIsShowPass] = useState(false);
 
-
     const handleAuthentication = async () => {
         try{
             if(user){
                 console.log('User is signed in');
-                navigation.navigate('Home');
+                navigation.navigate('Main');
             }else{
+
                 await createUserWithEmailAndPassword(FIREBASE_AUTH, email, password);
                 console.log('Signup successful');
                 const userId = FIREBASE_AUTH.currentUser.uid;
@@ -60,34 +60,6 @@ const SignupScreen = ({ navigation }) => {
 
   
     return (
-      // <View style={styles.container}>
-      //   <Text style={styles.title}>Signup</Text>
-      //   <TextInput
-      //     style={styles.input}
-      //     placeholder="Username"
-      //     value={username}
-      //     onChangeText={setUsername}
-      //   />
-      //   <TextInput
-      //     style={styles.input}
-      //     placeholder="Email"
-      //     value={email}
-      //     onChangeText={setEmail}
-      //     keyboardType="email-address"
-      //   />
-      //   <TextInput
-      //     style={styles.input}
-      //     placeholder="Password"
-      //     value={password}
-      //     onChangeText={setPassword}
-      //     secureTextEntry
-      //   />
-      //   {error ? <Text style={styles.error}>{error}</Text> : null}
-      //   <Button title="Signup" onPress={handleAuthentication} />
-      //   <Text style={styles.link} onPress={() => navigation.navigate('SignIn')}>
-      //           have an account? Sign in
-      //       </Text>
-      // </View>
       <SafeAreaView style={styles.container}>
       <View>
         <Text style={styles.title}>Đăng ký tài khoản</Text>
@@ -167,7 +139,7 @@ const SignupScreen = ({ navigation }) => {
             }}
           />
           <Text style={{ color:COLORS.white }}>
-            Đăng nhập bằng APPLE
+            Đăng ký bằng APPLE
           </Text>
         </TouchableOpacity>
 
@@ -185,7 +157,7 @@ const SignupScreen = ({ navigation }) => {
             }}
           />
           <Text style={{ textAlign: "center"}}>
-            Đăng nhập bằng GOOGLE
+            Đăng ký bằng GOOGLE
           </Text>
         </TouchableOpacity>
       </View>

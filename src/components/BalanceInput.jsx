@@ -7,6 +7,7 @@ export default function BalanceInput({type, onNumberChange}) {
 
   const textInputRef = useRef(null);
   const color = type === 'Chi tiền' ? COLORS.red: COLORS.green;
+
   let [number, setNumber] = useState(0);
   
   const handleChangeText = (text) => {

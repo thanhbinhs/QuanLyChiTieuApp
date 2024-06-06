@@ -14,7 +14,7 @@ import { useFetchData } from '../hooks/useFetchData';
 
 const Stack = createNativeStackNavigator();
 
-export default function AccountScreen() {
+export default function AccountScreen({ navigation }) {
   
   const {change, setChange} = useChange();
   console.log("AccountScreen");
@@ -42,6 +42,12 @@ export default function AccountScreen() {
     );
   }, [accountData]);
 
+  const accountCredit = useMemo(() => {
+    return accountData.filter(
+      (account) => account.accountType === "Thẻ tín dụng"
+    );
+  }, [accountData]);
+
   const headerHeight = useHeaderHeight();
 
   return (
@@ -65,7 +71,18 @@ export default function AccountScreen() {
         <ViewAccounts listings={accountMoney} title="Tiền mặt" />
         <ViewAccounts listings={accountBank} title="Tài khoản ngân hàng" />
         <ViewAccounts listings={accountWallet} title="Ví điện tử" />
+        <ViewAccounts listings={accountCredit} title="Thẻ tín dụng" />
+
+
       </ScrollView>
+      <TouchableOpacity onPress={()=> navigation.navigate("AddAccount")}>
+        <Ionicons
+          name="add-circle"
+          size={68}
+          color={COLORS.primary}
+          style={{ position: "absolute", bottom: 20, right: 20 }}
+        />
+      </TouchableOpacity>
     </>
   );
 }

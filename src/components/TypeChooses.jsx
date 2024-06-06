@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import React, { useState, useCallback, useMemo } from 'react';
 import TypeData from '../data/type.json';
 import { AntDesign } from '@expo/vector-icons';
@@ -49,7 +49,7 @@ export default function TypeChooses({ type, onItemChange, data }) {
   }, [data, type, accountData]);
 
   if (loading) {
-    return <Text style={{textAlign:'center'}}>Loading...</Text>;
+    return <ActivityIndicator size='large' color={COLORS.grey} />;
   }
 
   if (error) {
