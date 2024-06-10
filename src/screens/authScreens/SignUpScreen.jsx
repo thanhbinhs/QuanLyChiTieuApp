@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { View, TextInput, Button, Text, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
+import { View, TextInput, Button, Text, StyleSheet, SafeAreaView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { connectAuthEmulator, createUserWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
 import { FIREBASE_AUTH,FIRESTORE_DB } from '../../components/FirebaseConfig';
 import { addDoc, collection, connectFirestoreEmulator, doc, setDoc } from 'firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { COLORS } from '../../constants';
 import { Ionicons } from '@expo/vector-icons';
+import { is } from 'date-fns/locale';
 
 const SignupScreen = ({ navigation }) => {
     const [username, setUsername] = useState('');
@@ -14,12 +15,17 @@ const SignupScreen = ({ navigation }) => {
     const [error, setError] = useState('');
     const [user, setUser] = useState(null); // Track user authentication state
     const [isshowPass, setIsShowPass] = useState(false);
+    const [data, isData] = useState(true);
 
     const handleAuthentication = async () => {
+      isData(false);
         try{
             if(user){
                 console.log('User is signed in');
-                navigation.navigate('Main');
+                navigation.reset({
+                  index: 0,
+                  routes: [{ name: 'Main' }],
+                });
             }else{
 
                 await createUserWithEmailAndPassword(FIREBASE_AUTH, email, password);
@@ -50,8 +56,12 @@ const SignupScreen = ({ navigation }) => {
                     expense: 0,
                     createdAt: new Date(),
                 });
+                isData(true);
                 console.log('Account added to user subcollection');
-                navigation.navigate('Main');
+                navigation.reset({
+                  index: 0,
+                  routes: [{ name: 'Main' }],
+                });
             }
         }catch(error){
             console.log('Authentication error: ', error.message);
@@ -61,7 +71,7 @@ const SignupScreen = ({ navigation }) => {
   
     return (
       <SafeAreaView style={styles.container}>
-      <View>
+      {data ?(      <View>
         <Text style={styles.title}>Đăng ký tài khoản</Text>
       
         <TextInput
@@ -160,7 +170,24 @@ const SignupScreen = ({ navigation }) => {
             Đăng ký bằng GOOGLE
           </Text>
         </TouchableOpacity>
+      </View>) :(
+        <View
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          backgroundColor: "rgba(0,0,0,0.5)",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <ActivityIndicator size="large" color={COLORS.primary} />
       </View>
+      
+      )}
+
     </SafeAreaView>
     );
   };

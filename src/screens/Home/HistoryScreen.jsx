@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import React, { useState } from "react";
 import { useChange } from "../../context/ChangeContext";
 import { useFetchData } from "../../hooks/useFetchData";
@@ -14,8 +14,9 @@ import {
   filterCurrentWeekNotes,
   filterTodayNotes,
 } from "../../global/functions";
+import { RectButton, Swipeable } from "react-native-gesture-handler";
 
-export default function HistoryScreen({navigation}) {
+export default function HistoryScreen({ navigation }) {
   const { change, setChange } = useChange();
   const { userData, noteData, accountData, loading, error } =
     useFetchData(change);
@@ -35,12 +36,26 @@ export default function HistoryScreen({navigation}) {
     // Nhóm các ghi chú đã lọc theo ngày
     var groupedNotes = groupNotesByDate(todayNotes);
   }
+  const renderRightActions = (progress, dragX) => {
+    return (
+      <View style={styles.actionContainer}>
+        <RectButton style={[styles.actionButton, { backgroundColor: "red" }]}>
+          <Text style={styles.actionText}>Delete</Text>
+        </RectButton>
+        <RectButton style={[styles.actionButton, { backgroundColor: "blue" }]}>
+          <Text style={styles.actionText}>Archive</Text>
+        </RectButton>
+      </View>
+    );
+  };
 
   return (
     <View style={{ marginTop: 110 }}>
       <TouchableOpacity
         style={{ height: 40, justifyContent: "center", flexDirection: "row" }}
-        onPress={() => navigation.navigate("SelectDate", {onChangeTime: setTime})}
+        onPress={() =>
+          navigation.navigate("SelectDate", { onChangeTime: setTime })
+        }
       >
         <Text style={{ color: COLORS.primary, fontSize: 20 }}>{time}</Text>
         <Entypo name="chevron-right" size={28} color={COLORS.primary} />
@@ -120,46 +135,55 @@ export default function HistoryScreen({navigation}) {
                 </Text>
               )}
             </View>
-            {groupedNotes[date].notes.map((note, index) => (
-              <View
+            {groupedNotes[date].notes.map((note, index) => ( 
+              <Swipeable
+                renderRightActions={renderRightActions}
                 key={index}
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  paddingVertical: 16,
-                  paddingRight: 15,
-                  borderBottomColor: "#ccc",
-                  borderBottomWidth: 1,
-                }}
+                rightThreshold={40}
               >
-                <Text
+                <View
                   style={{
-                    color: COLORS.black,
-                    fontSize: 18,
-                    fontWeight: "500",
-                    marginLeft: 20,
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    paddingVertical: 16,
+                    paddingRight: 15,
+                    borderBottomColor: "#ccc",
+                    borderBottomWidth: 1,
                   }}
                 >
-                  {note.noteName}
-                </Text>
-                {note.noteType === "Chi tiền" ? (
-                  <Text
-                    style={{ color: COLORS.red, fontSize: 20, marginLeft: 20 }}
-                  >
-                    {note.noteMoney.toLocaleString("en-US")} đ
-                  </Text>
-                ) : (
                   <Text
                     style={{
-                      color: COLORS.green,
-                      fontSize: 20,
+                      color: COLORS.black,
+                      fontSize: 18,
+                      fontWeight: "500",
                       marginLeft: 20,
                     }}
                   >
-                    {note.noteMoney.toLocaleString("en-US")} đ
+                    {note.noteName}
                   </Text>
-                )}
-              </View>
+                  {note.noteType === "Chi tiền" ? (
+                    <Text
+                      style={{
+                        color: COLORS.red,
+                        fontSize: 20,
+                        marginLeft: 20,
+                      }}
+                    >
+                      {note.noteMoney.toLocaleString("en-US")} đ
+                    </Text>
+                  ) : (
+                    <Text
+                      style={{
+                        color: COLORS.green,
+                        fontSize: 20,
+                        marginLeft: 20,
+                      }}
+                    >
+                      {note.noteMoney.toLocaleString("en-US")} đ
+                    </Text>
+                  )}
+                </View>
+              </Swipeable>
             ))}
           </View>
         ))}
@@ -167,3 +191,20 @@ export default function HistoryScreen({navigation}) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  actionContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  actionButton: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    width: 75,
+  },
+  actionText: {
+    color: "white",
+    fontSize: 16,
+  },
+});

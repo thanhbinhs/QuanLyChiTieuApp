@@ -49,7 +49,7 @@ export default function TypeChooses({ type, onItemChange, data }) {
   }, [data, type, accountData]);
 
   if (loading) {
-    return <ActivityIndicator size='large' color={COLORS.grey} />;
+    return null;
   }
 
   if (error) {

@@ -1,4 +1,5 @@
 import React, { Component, useState, useEffect, useRef } from "react";
+import 'react-native-gesture-handler';
 import { StatusBar } from "expo-status-bar";
 import {
   View,
@@ -32,6 +33,12 @@ import { COLORS } from "./src/constants";
 import { Entypo, Ionicons } from "@expo/vector-icons";
 import { useFetchData } from './src/hooks/useFetchData';
 import { useChange } from "./src/context/ChangeContext";
+import { registerRootComponent } from 'expo';
+import { name as appName } from './app.json';
+import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
+
+registerRootComponent(gestureHandlerRootHOC(App));
+
 
 import Providers from "./src/context/Providers";
 
@@ -469,6 +476,7 @@ export default function App() {
 
     checkUserDocId();
   }, []);
+
 
   if (isLoading) {
     return null; // hoặc một ActivityIndicator để hiển thị khi đang tải

@@ -16,7 +16,7 @@ const LoadingScreen = () => {
       if (userToken) {
         navigation.navigate('Main');
       } else {
-        navigation.navigate('SignIn');
+        navigation.navigate('Welcome');
       }
     };
 

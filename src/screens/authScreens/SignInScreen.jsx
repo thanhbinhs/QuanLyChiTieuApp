@@ -7,6 +7,7 @@ import {
   StyleSheet,
   SafeAreaView,
   TouchableOpacity,
+  ActivityIndicator
 } from "react-native";
 import {  signInWithEmailAndPassword, OAuthProvider, signInWithCredential  } from "firebase/auth";
 import { FIREBASE_AUTH, FIRESTORE_DB } from "../../components/FirebaseConfig";
@@ -20,17 +21,24 @@ const SignInScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isshowPass, setIsShowPass] = useState(false);
+  const [data, isData] = useState(true);
+
 
 
   const handleSignIn = async () => {
+    isData(false);
     try {
       await signInWithEmailAndPassword(FIREBASE_AUTH, email, password);
       console.log("Sign in successful");
       const userId = FIREBASE_AUTH.currentUser.uid;
       await AsyncStorage.setItem("userDocId", userId);
       const userDocId = await AsyncStorage.getItem("userDocId");
+      isData(true);
       console.log("User document ID stored in AsyncStorage", userDocId);
-      navigation.navigate("Main");
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Main' }],
+      });
     } catch (error) {
       setError(error.message);
     }
@@ -63,7 +71,10 @@ const SignInScreen = ({ navigation }) => {
         });
       }
   
-      navigation.navigate("Main");
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Main' }],
+      });
     } catch (error) {
       console.log(error);
     }
@@ -72,108 +83,126 @@ const SignInScreen = ({ navigation }) => {
   return (
     <>
       <SafeAreaView style={styles.container}>
+        {data ? (
         <View>
-          <Text style={styles.title}>Chào mừng tới App</Text>
-          <Text style={{ marginBottom: 24, textAlign: "center" }}>
-            Đăng nhập
-          </Text>
+        <Text style={styles.title}>Chào mừng tới App</Text>
+        <Text style={{ marginBottom: 24, textAlign: "center" }}>
+          Đăng nhập
+        </Text>
+        <TextInput
+          placeholder="Email"
+          style={styles.input}
+          value={email}
+          onChangeText={setEmail}
+        />
+        <View>
           <TextInput
-            placeholder="Email"
+            placeholder="Mật khẩu"
             style={styles.input}
-            value={email}
-            onChangeText={setEmail}
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={isshowPass ? false : true}
           />
-          <View>
-            <TextInput
-              placeholder="Mật khẩu"
-              style={styles.input}
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry={isshowPass ? false : true}
-            />
-            {isshowPass ? (
-              <Ionicons
-                name="eye-off"
-                size={24}
-                color={COLORS.grey}
-                style={{ position: "absolute", right: 50, top: 12 }}
-                onPress={() => setIsShowPass(!isshowPass)}
-              />
-            ) : (
-              <Ionicons
-                name="eye"
-                size={24}
-                color={COLORS.grey}
-                style={{ position: "absolute", right: 50, top: 12 }}
-                onPress={() => setIsShowPass(!isshowPass)}
-              />
-            )}
-          </View>
-          <Text
-            style={{ textAlign: "right", paddingRight: 36 }}
-            onPress={() => navigation.navigate("ForgotPassword")}
-          >
-            Quên mật khẩu?
-          </Text>
-          <TouchableOpacity
-            style={{
-              backgroundColor: COLORS.primary,
-              alignItems: "center",
-              padding: 12,
-              width: 320,
-              alignSelf: "center",
-              borderRadius: 20,
-              marginTop: 24,
-            }}
-            onPress={handleSignIn}
-          >
-            <Text style={{color:COLORS.white, fontSize:16}}>ĐĂNG NHẬP</Text>
-          </TouchableOpacity>
-          <View style={{ flexDirection: "row", paddingLeft:36,  alignItems:'center' }}>
-            <Text>Chưa có tài khoản?</Text>
-            <Button
-              title="ĐĂNG KÝ"
-              style={{ color: COLORS.primary }}
-              onPress={() => navigation.navigate("SignUp")}
-            />
-          </View>
-          <TouchableOpacity
-            style={[styles.button, { backgroundColor:COLORS.black }]}
-            onPress={loginWithApple}
-          >
+          {isshowPass ? (
             <Ionicons
-              name="logo-apple"
+              name="eye-off"
               size={24}
-              color="white"
-              style={{
-                marginRight:10,
-                borderRadius: 20,
-                alignSelf: "center",
-              }}
+              color={COLORS.grey}
+              style={{ position: "absolute", right: 50, top: 12 }}
+              onPress={() => setIsShowPass(!isshowPass)}
             />
-            <Text style={{ color:COLORS.white }}>
-              Đăng nhập bằng APPLE
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.button, { backgroundColor:COLORS.white}]}
-          >
+          ) : (
             <Ionicons
-              name="logo-google"
+              name="eye"
               size={24}
-              color="black"
-              style={{
-                marginRight:10,
-                borderRadius: 20,
-                alignSelf: "center",
-              }}
+              color={COLORS.grey}
+              style={{ position: "absolute", right: 50, top: 12 }}
+              onPress={() => setIsShowPass(!isshowPass)}
             />
-            <Text style={{ textAlign: "center"}}>
-              Đăng nhập bằng GOOGLE
-            </Text>
-          </TouchableOpacity>
+          )}
         </View>
+        <Text
+          style={{ textAlign: "right", paddingRight: 36 }}
+          onPress={() => navigation.navigate("ForgotPassword")}
+        >
+          Quên mật khẩu?
+        </Text>
+        <TouchableOpacity
+          style={{
+            backgroundColor: COLORS.primary,
+            alignItems: "center",
+            padding: 12,
+            width: 320,
+            alignSelf: "center",
+            borderRadius: 20,
+            marginTop: 24,
+          }}
+          onPress={handleSignIn}
+        >
+          <Text style={{color:COLORS.white, fontSize:16}}>ĐĂNG NHẬP</Text>
+        </TouchableOpacity>
+        <View style={{ flexDirection: "row", paddingLeft:36,  alignItems:'center' }}>
+          <Text>Chưa có tài khoản?</Text>
+          <Button
+            title="ĐĂNG KÝ"
+            style={{ color: COLORS.primary }}
+            onPress={() => navigation.navigate("SignUp")}
+          />
+        </View>
+        <TouchableOpacity
+          style={[styles.button, { backgroundColor:COLORS.black }]}
+          onPress={loginWithApple}
+        >
+          <Ionicons
+            name="logo-apple"
+            size={24}
+            color="white"
+            style={{
+              marginRight:10,
+              borderRadius: 20,
+              alignSelf: "center",
+            }}
+          />
+          <Text style={{ color:COLORS.white }}>
+            Đăng nhập bằng APPLE
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.button, { backgroundColor:COLORS.white}]}
+        >
+          <Ionicons
+            name="logo-google"
+            size={24}
+            color="black"
+            style={{
+              marginRight:10,
+              borderRadius: 20,
+              alignSelf: "center",
+            }}
+          />
+          <Text style={{ textAlign: "center"}}>
+            Đăng nhập bằng GOOGLE
+          </Text>
+        </TouchableOpacity>
+      </View>
+        ):(
+          <View
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          backgroundColor: "rgba(0,0,0,0.5)",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <ActivityIndicator size="large" color={COLORS.primary} />
+      </View>
+        )}
+
       </SafeAreaView>
     </>
   );

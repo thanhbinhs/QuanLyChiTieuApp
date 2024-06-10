@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   Alert,
+  ActivityIndicator
 } from "react-native";
 import React, { useState, useRef } from "react";
 import { COLORS } from "../../constants";
@@ -25,10 +26,11 @@ export default function AddAccountScreen({ navigation }) {
   const [number, setNumber] = useState(0);
   const [name, setName] = useState("");
   const [selection, setSelection] = useState("Tiền mặt"); // [1,2,3]
-  const [bank, setBank] = useState("");
+  const [bank, setBank] = useState("BIDV");
   const textInputRef = useRef(null);
   const [itemId, setItemId] = useState(1);
   const [bankId, setBankId] = useState(1);
+  const [success, setSuccess] = useState(true);
   // const [image, setImage] = useState("");
   let image ="";
   const { change, setChange } = useChange();
@@ -68,6 +70,8 @@ export default function AddAccountScreen({ navigation }) {
       return;
     }
 
+    setSuccess(false);  
+
     if(selection === "Tài khoản ngân hàng"){
       // setImage(bankData.find((item) => item.id === bankId).image);
       image = bankData.find((item) => item.id === bankId).image;
@@ -99,18 +103,20 @@ export default function AddAccountScreen({ navigation }) {
     image = "";
     setName("");
     setNumber(0);
-    setSelection("");
+    setSelection("Tiền mặt");
     setBank(1);
     setItemId(1);
 
-
+    setSuccess(true);
     Alert.alert('Ghi chú thành công');
     setChange(!change);
   }
 
   return (
     <>
-      <View
+    {success ? (
+      <>
+       <View
         style={{ marginTop: 100, paddingVertical: 10, paddingHorizontal: 20 }}
       >
         <Text style={{ fontSize: 16, textAlign: "right" }}>Số dư ban đầu</Text>
@@ -217,6 +223,24 @@ export default function AddAccountScreen({ navigation }) {
       ) : null}
 
       <SubmitButton handleSubmit={handleSubmit} />
+      </>
+    ) : (
+      <View
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          backgroundColor: "rgba(0,0,0,0.5)",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <ActivityIndicator size="large" color={COLORS.primary} />
+      </View>
+    )}
+     
     </>
   );
 }

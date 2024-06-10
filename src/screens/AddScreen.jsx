@@ -42,7 +42,7 @@ export default function AddScreen() {
     }
 
     const handleSubmit = async () => {
-        setData(false);
+
         if (number === 0) {
             Alert.alert('Vui lòng nhập số tiền');
             return;
@@ -55,6 +55,7 @@ export default function AddScreen() {
             Alert.alert('Vui lòng chọn tài khoản');
             return;
             }
+            setData(false);
         const userDocId = await AsyncStorage.getItem('userDocId');
         // const accountDocRef = doc(collection(FIRESTORE_DB, 'users', userDocId, 'account'));
         const noteDocRef = doc(collection(FIRESTORE_DB, 'users', userDocId, 'account', account, 'note'));
@@ -133,16 +134,22 @@ export default function AddScreen() {
               <TypeChooses type={type} onItemChange={handleTypeNoteChange} data="type"/>
               <TypeChooses type={type} onItemChange={handleAccountChange} data="account"/>
               <SubmitButton handleSubmit={handleSubmit} />
-              {/* <TouchableOpacity style={{alignItems:'center'}} onPress={handleSubmit} >
-                <View style={{width:'90%', height:50, backgroundColor:COLORS.primary, justifyContent:'center', alignItems:'center', borderRadius:10}}> 
-                  <Text style={{fontSize:24, color:COLORS.white}}>Ghi</Text>
-                </View>
-              </TouchableOpacity> */}
               </ScrollView> 
       ):(
-        <View style={{justifyContent:'center', alignItems:'center'}}>
-          <ActivityIndicator size="large" color={COLORS.primary} />
-        </View>
+        <View
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          backgroundColor: "rgba(0,0,0,0.5)",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <ActivityIndicator size="large" color={COLORS.primary} />
+      </View>
       )}
   
       </>
