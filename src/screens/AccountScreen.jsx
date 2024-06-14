@@ -1,4 +1,11 @@
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Platform,
+  TouchableWithoutFeedback,
+} from "react-native";
 import React, { useMemo, useState, useEffect } from "react";
 import { StyleSheet } from "react-native";
 import { COLORS } from "../constants/theme";
@@ -9,18 +16,16 @@ import SizedBox from "../components/SizedBox";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ViewAccounts from "../components/ViewAccounts";
 import { useChange } from "../context/ChangeContext";
-import { useFetchData } from '../hooks/useFetchData';
-
+import { useFetchData } from "../hooks/useFetchData";
 
 const Stack = createNativeStackNavigator();
 
 export default function AccountScreen({ navigation }) {
-  
-  const {change, setChange} = useChange();
+  const { change, setChange } = useChange();
   console.log("AccountScreen");
 
-  const { userData, noteData, accountData, loading, error } = useFetchData(change);
-
+  const { userData, noteData, accountData, loading, error } =
+    useFetchData(change);
 
   const total = useMemo(() => {
     return accountData.reduce((total, account) => total + account.balance, 0);
@@ -72,17 +77,34 @@ export default function AccountScreen({ navigation }) {
         <ViewAccounts listings={accountBank} title="Tài khoản ngân hàng" />
         <ViewAccounts listings={accountWallet} title="Ví điện tử" />
         <ViewAccounts listings={accountCredit} title="Thẻ tín dụng" />
-
-
       </ScrollView>
-      <TouchableOpacity onPress={()=> navigation.navigate("AddAccount")}>
-        <Ionicons
-          name="add-circle"
-          size={68}
-          color={COLORS.primary}
-          style={{ position: "absolute", bottom: 20, right: 20 }}
-        />
-      </TouchableOpacity>
+      {Platform.OS === "android" ? (
+        <TouchableWithoutFeedback
+          onPress={() => {
+            navigation.navigate("AddAccount");
+          }}
+        >
+          <Ionicons
+            name="add-circle"
+            size={68}
+            color={COLORS.primary}
+            style={{ position: "absolute", bottom: 20, right: 20 }}
+          />
+        </TouchableWithoutFeedback>
+      ) : (
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("AddAccount");
+          }}
+        >
+          <Ionicons
+            name="add-circle"
+            size={68}
+            color={COLORS.primary}
+            style={{ position: "absolute", bottom: 20, right: 20 }}
+          />
+        </TouchableOpacity>
+      )}
     </>
   );
 }

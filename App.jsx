@@ -36,6 +36,7 @@ import { useChange } from "./src/context/ChangeContext";
 import { registerRootComponent } from 'expo';
 import { name as appName } from './app.json';
 import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 registerRootComponent(gestureHandlerRootHOC(App));
 
@@ -52,6 +53,7 @@ const ReportStack = createStackNavigator();
 
 function HomeStackScreen({navigation}) {
   return (
+
     <HomeStack.Navigator>
       <HomeStack.Screen
         name="Home"
@@ -122,6 +124,7 @@ function HomeStackScreen({navigation}) {
         }}
       />
     </HomeStack.Navigator>
+
   );
 }
 

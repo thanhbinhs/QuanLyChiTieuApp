@@ -1,4 +1,4 @@
-import { View, Text, Button, SafeAreaView, Image, StyleSheet, TouchableOpacity, TextInput } from 'react-native'
+import { View, Text, Button, SafeAreaView, Image, StyleSheet, TouchableOpacity, TextInput, ScrollView } from 'react-native'
 import React from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { FIREBASE_AUTH } from '../components/FirebaseConfig';
@@ -25,7 +25,7 @@ export default function SettingScreen() {
   }
 
   return (
-    <View >
+    <ScrollView >
       <View style={styles.itemCenter}>
         <Image source={{uri: "https://xsgames.co/randomusers/avatar.php?g=male"}} style={styles.avatar}/>
       </View>
@@ -57,11 +57,11 @@ export default function SettingScreen() {
         </View>
       </View>
 
-      <View style={styles.flexRow}>
+      <View style={[styles.flexRow, {marginBottom:20}]}>
       <Entypo name="log-out" size={24} color={COLORS.primary}  onPress={signOut}/>
         <Text style={{fontSize:18, color:COLORS.primary}} onPress={signOut  }>Đăng xuất</Text>
       </View>
-    </View>
+    </ScrollView>
   )
 }
 
