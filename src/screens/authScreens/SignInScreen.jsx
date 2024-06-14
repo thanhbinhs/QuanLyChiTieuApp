@@ -7,7 +7,8 @@ import {
   StyleSheet,
   SafeAreaView,
   TouchableOpacity,
-  ActivityIndicator
+  ActivityIndicator,
+  Alert
 } from "react-native";
 import {  signInWithEmailAndPassword, OAuthProvider, signInWithCredential  } from "firebase/auth";
 import { FIREBASE_AUTH, FIRESTORE_DB } from "../../components/FirebaseConfig";
@@ -40,7 +41,21 @@ const SignInScreen = ({ navigation }) => {
         routes: [{ name: 'Main' }],
       });
     } catch (error) {
-      setError(error.message);
+      isData(true);
+      console.log("Authentication error: ", error.message, error.code);
+      if (error.code === "auth/invalid-credential") {
+        Alert.alert(
+          "Thông báo",
+          "Email hoặc Mật khẩu không đúng. Vui lòng thử lại."
+        );
+        return;
+      }else if(error.code === "auth/too-many-requests"){
+        Alert.alert(
+          "Thông báo",
+          "Bạn đã đăng nhập quá nhiều lần. Vui lòng thử lại sau vài phút!"
+        );
+        return;
+      }
     }
   };
 
@@ -76,7 +91,7 @@ const SignInScreen = ({ navigation }) => {
         routes: [{ name: 'Main' }],
       });
     } catch (error) {
-      console.log(error);
+      console.log("Authentication error: ", error.message);
     }
   }
 
