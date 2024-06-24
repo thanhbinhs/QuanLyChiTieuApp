@@ -15,8 +15,9 @@ import { useFetchData } from "../hooks/useFetchData";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FIRESTORE_DB } from "./FirebaseConfig";
 import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
+import { useNavigation } from "@react-navigation/native";
 
-export default function ViewAccounts({ listings, title }) {
+export default function ViewAccounts({ listings, title, navigation }) {
   const { change, setChange } = useChange();
 
   const widthScreen = Dimensions.get("window").width;
@@ -65,18 +66,6 @@ export default function ViewAccounts({ listings, title }) {
                   </Text>
                 </View>
               </View>
-              <TouchableOpacity
-                onPress={() => {
-                  setSelectedItemId(
-                    account.accountId === selectedItemId
-                      ? null
-                      : account.accountId
-                  );
-                }}
-              >
-                <Ionicons name="ellipsis-vertical" size={24} color="black" />
-              </TouchableOpacity>
-
               <View
                 style={{
                   width: widthScreen,
@@ -88,21 +77,52 @@ export default function ViewAccounts({ listings, title }) {
                 }}
               ></View>
               {account.accountId === selectedItemId && (
-                <TouchableOpacity
+                <View
                   style={{
                     position: "absolute",
                     right: 0,
                     top: 50,
                     backgroundColor: COLORS.white,
                     padding: 10,
+                    paddingHorizontal: 20,
+                    zIndex: 100,
                   }}
-                  onPress={() =>
-                    deleteAccount(account.accountId, account.balance)
-                  }
                 >
-                  <Text>Xóa</Text>
-                </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{ paddingHorizontal: 10 }}
+                    onPress={() =>
+                      deleteAccount(account.accountId, account.balance)
+                    }
+                  >
+                    <Text>Xóa</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{
+                      marginTop: 10,
+                      borderTopColor: "#ccc",
+                      borderTopWidth: 1,
+                      paddingTop: 10,
+                      paddingHorizontal: 10,
+                    }}
+                    onPress={() =>
+                      navigation.navigate("EditAccount", { account: account })
+                    }
+                  >
+                    <Text>Sửa</Text>
+                  </TouchableOpacity>
+                </View>
               )}
+              <TouchableOpacity
+                onPress={() => {
+                  setSelectedItemId(
+                    account.accountId === selectedItemId
+                      ? null
+                      : account.accountId
+                  );
+                }}
+              >
+                <Ionicons name="ellipsis-vertical" size={24} color="black" />
+              </TouchableOpacity>
             </View>
           ))}
         </View>

@@ -14,9 +14,15 @@ const LoadingScreen = () => {
       const userToken = await AsyncStorage.getItem('userDocId');
 
       if (userToken) {
-        navigation.navigate('Main');
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'Main' }],
+        });
       } else {
-        navigation.navigate('Welcome');
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'Welcome' }],
+        });
       }
     };
 

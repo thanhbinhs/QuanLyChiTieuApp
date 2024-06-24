@@ -36,23 +36,23 @@ export default function SettingScreen() {
 
       <View style={[styles.flexRow,{flexDirection:'column', alignItems:'flex-start', padding:0}]}>
         <View style={styles.row}>
-        <Ionicons name="person" size={28} color="#ccc" />
+        <Ionicons name="person" size={28} color={COLORS.primary} />
         <Text style={{fontSize:18, color:COLORS.black, paddingLeft:10}}>Tài khoản</Text>
         </View>
         <View style={styles.row}>
-        <Ionicons name="lock-closed-outline" size={28} color="#ccc" />
+        <Ionicons name="lock-closed-outline" size={28} color={COLORS.primary} />
         <Text style={{fontSize:18, color:COLORS.black, paddingLeft:10}}>Bảo mật & Quyền riêng tư</Text>
         </View>
         <View style={styles.row}>
-        <Ionicons name="notifications" size={28} color="#ccc" />
+        <Ionicons name="notifications" size={28} color={COLORS.primary} />
         <Text style={{fontSize:18, color:COLORS.black, paddingLeft:10}}>Thông báo</Text>
         </View>
         <View style={styles.row}>
-        <Feather name="help-circle" size={28} color="#ccc" />
+        <Feather name="help-circle" size={28} color={COLORS.primary} />
         <Text style={{fontSize:18, color:COLORS.black, paddingLeft:10}}>Hỗ trợ</Text>
         </View>
         <View style={[styles.row,{borderBottomWidth:0}]}>
-        <MaterialCommunityIcons name="email-newsletter" size={28} color="#ccc" />
+        <MaterialCommunityIcons name="email-newsletter" size={28} color={COLORS.primary} />
         <Text style={{fontSize:18, color:COLORS.black, paddingLeft:10}}>Góp ý nhà phát triển</Text>
         </View>
       </View>

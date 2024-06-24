@@ -15,7 +15,7 @@ export default function SelectBankScreen({ navigation }) {
   const handleSelectionChange = (selection) => {
     setSelectedItem(selection);
     onselectionbankchange(selection);
-    navigation.navigate("AddAccount");
+    navigation.goBack();
   };
 
   return (

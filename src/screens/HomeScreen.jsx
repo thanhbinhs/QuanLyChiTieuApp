@@ -1,77 +1,158 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { FIREBASE_AUTH, FIRESTORE_DB } from '../components/FirebaseConfig';
-import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
-import { SIZES, COLORS } from '../constants';
-import { Ionicons } from '@expo/vector-icons';
-import SizedBox from '../components/SizedBox';
-import ExpenseAIncome from '../components/ExpenseAIncome';
-import RateTables from '../components/RateTables';
-import { useChange } from '../context/ChangeContext';
-import { useFetchData } from '../hooks/useFetchData';
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
+import { FIREBASE_AUTH, FIRESTORE_DB } from "../components/FirebaseConfig";
+import { doc, getDoc, collection, getDocs } from "firebase/firestore";
+import { SIZES, COLORS } from "../constants";
+import { Ionicons } from "@expo/vector-icons";
+import SizedBox from "../components/SizedBox";
+import ExpenseAIncome from "../components/ExpenseAIncome";
+import RateTables from "../components/RateTables";
+import { useChange } from "../context/ChangeContext";
+import { useFetchData } from "../hooks/useFetchData";
+import SwipeableItem from "../components/SwipeableItem";
+import { filterTodayNotes, groupNotesByDate } from "../global/functions";
 
-const HomeScreen = ({navigation}) => {
-    const [isshow, setIsshow] = useState(false);
-    const { change, setChange } = useChange();
-    console.log("HomeScreen");
+const HomeScreen = ({ navigation }) => {
+  const [isshow, setIsshow] = useState(false);
+  const { change, setChange } = useChange();
+  const [data, setData] = useState(true);
+  console.log("HomeScreen");
 
-    const { userData, noteData, accountData, loading, error } = useFetchData(change);
+  const { userData, noteData, accountData, loading, error } =
+    useFetchData(change);
+  const todayNotes = filterTodayNotes(noteData);
+  // Nhóm các ghi chú đã lọc theo ngày
+  var groupedNotes = groupNotesByDate(todayNotes);
 
-    return (
-      <>
-        {
-          userData && noteData ? (
-            <>
-            <View style={styles.header}>
-              <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                <Text style={styles.headerTitle}>Hello {userData.username}</Text>
-                <TouchableOpacity onPress={{}}>
-                  <Ionicons name="notifications" size={24} color={COLORS.white} />
-                </TouchableOpacity>
-              </View>
-              <View style={styles.infoWrapper}>
-                <View>
-                  <View style={{ flexDirection: "row", alignItems: "center", paddingBottom: 5 }}>
-                    <Text style={{ fontSize: 14, color: "#999" }}>Tổng số dư</Text>
-                    <Ionicons name="chevron-forward" size={20} color="#999" />
-                  </View>
-                  {userData.total < 0 ? (
-                    <Text style={{ color: COLORS.red, fontSize: 28, fontWeight: "700" }}>
-                      {isshow ? "***000" : "-" + Math.abs(userData.total).toLocaleString('en-US')} VND
-                    </Text>
-                  ) : (
-                    <Text style={{ color: COLORS.green, fontSize: 28, fontWeight: "700" }}>
-                      {isshow ? "***000" : "+" + userData.total.toLocaleString('en-US')} VND
-                    </Text>
-                  )}
-                </View>
-                <TouchableOpacity onPress={() => setIsshow(!isshow)}>
-                  {isshow ? (
-                    <Ionicons name="eye-off-sharp" size={30} color="#999" />
-                  ) : (
-                    <Ionicons name="eye-sharp" size={30} color="#999" />
-                  )}
-                </TouchableOpacity>
-              </View>
+  return (
+    <>
+      {userData && noteData ? (
+        <>
+          <View style={styles.header}>
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <Text style={styles.headerTitle}>Hello {userData.username}</Text>
+              <TouchableOpacity>
+                <Ionicons name="notifications" size={24} color={COLORS.white} />
+              </TouchableOpacity>
             </View>
+            <View style={styles.infoWrapper}>
+              <View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    paddingBottom: 5,
+                  }}
+                >
+                  <Text style={{ fontSize: 14, color: "#999" }}>
+                    Tổng số dư
+                  </Text>
+                  <Ionicons name="chevron-forward" size={20} color="#999" />
+                </View>
+                {userData.total < 0 ? (
+                  <Text
+                    style={{
+                      color: COLORS.red,
+                      fontSize: 28,
+                      fontWeight: "700",
+                    }}
+                  >
+                    {isshow
+                      ? "***000"
+                      : "-" +
+                        Math.abs(userData.total).toLocaleString("en-US")}{" "}
+                    VND
+                  </Text>
+                ) : (
+                  <Text
+                    style={{
+                      color: COLORS.green,
+                      fontSize: 28,
+                      fontWeight: "700",
+                    }}
+                  >
+                    {isshow
+                      ? "***000"
+                      : "+" + userData.total.toLocaleString("en-US")}{" "}
+                    VND
+                  </Text>
+                )}
+              </View>
+              <TouchableOpacity onPress={() => setIsshow(!isshow)}>
+                {isshow ? (
+                  <Ionicons name="eye-off-sharp" size={30} color="#999" />
+                ) : (
+                  <Ionicons name="eye-sharp" size={30} color="#999" />
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
+          <SizedBox />
+          <ScrollView>
+            <ExpenseAIncome listing={noteData} navigation={navigation} />
             <SizedBox />
-                  <ScrollView>
-              <ExpenseAIncome listing={noteData} navigation={navigation} />
+            {Object.keys(groupedNotes).map((date) => {
+              return (
+                <View key={date}>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      paddingHorizontal: 15,
+                      paddingVertical: 20,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 18,
+                        fontWeight: "bold",
+                        color: COLORS.primary,
+                      }}
+                    >
+                      {date}
+                    </Text>
+                    <Text style={{fontSize:24}}>
+                      {groupedNotes[date].total.toLocaleString("en-US")} đ
+                    </Text>
+                  </View>
 
+                  {groupedNotes[date].notes.map((note, index) => {
+                    return (
+                      <SwipeableItem
+                        item={note}
+                        setData={setData}
+                        setChange={setChange}
+                        change={change}
+                        navigation={navigation}
+                      />
+                    );
+                  })}
+                </View>
+              );
+            })}
             <SizedBox />
             <RateTables />
-            </ScrollView>
-            </>
-          ) : (
-            <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
-
-              <ActivityIndicator size="large" color={COLORS.primary} />
-            </View>
-          )
-          
-        }
-      </>
-    );
+          </ScrollView>
+        </>
+      ) : (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <ActivityIndicator size="large" color={COLORS.primary} />
+        </View>
+      )}
+    </>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -94,7 +175,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
     borderRadius: 10,
     paddingVertical: 10,
-    paddingHorizontal: 15
+    paddingHorizontal: 15,
   },
 });
 

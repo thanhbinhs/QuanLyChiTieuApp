@@ -113,3 +113,4 @@ export const filterTodayNotes = (notes) => {
       return date && isSameDay(date, now);
     });
   };
+

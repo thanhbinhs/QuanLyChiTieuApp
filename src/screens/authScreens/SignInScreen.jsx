@@ -61,6 +61,7 @@ const SignInScreen = ({ navigation }) => {
 
   const loginWithApple = async () => {
     try {
+      // Yêu cầu Apple sign-in
       const credential = await AppleAuthentication.signInAsync({
         requestedScopes: [
           AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
@@ -69,14 +70,21 @@ const SignInScreen = ({ navigation }) => {
       });
   
       const { identityToken, email, fullName } = credential;
+  
+      // Xác thực với Firebase
       const provider = new OAuthProvider('apple.com');
-      const appleCredential = provider.credential({ idToken: identityToken });
+      const appleCredential = provider.credential({
+        idToken: identityToken,
+        rawNonce: null, // Nếu cần thiết có thể thêm rawNonce
+      });
   
       await signInWithCredential(FIREBASE_AUTH, appleCredential);
+  
       const user = FIREBASE_AUTH.currentUser;
       const userDoc = FIRESTORE_DB.collection("users").doc(user.uid);
       const userDocSnap = await userDoc.get();
   
+      // Nếu user chưa tồn tại, tạo mới user
       if (!userDocSnap.exists) {
         await userDoc.set({
           email: email,
@@ -86,6 +94,7 @@ const SignInScreen = ({ navigation }) => {
         });
       }
   
+      // Điều hướng đến màn hình chính
       navigation.reset({
         index: 0,
         routes: [{ name: 'Main' }],
@@ -94,6 +103,51 @@ const SignInScreen = ({ navigation }) => {
       console.log("Authentication error: ", error.message);
     }
   }
+
+
+const loginWithGoogle = async () => {
+
+  try {
+    // Cấu hình Google sign-in
+    const config = {
+      iosClientId: Constants.manifest.extra.googleAuth.iosClientId,
+      androidClientId: Constants.manifest.extra.googleAuth.androidClientId,
+      expoClientId: Constants.manifest.extra.googleAuth.expoClientId,
+    };
+
+    const result = await Google.logInAsync(config);
+
+    if (result.type === 'success') {
+      const { idToken, accessToken, user } = result;
+      const provider = new OAuthProvider('google.com');
+      const googleCredential = provider.credential(idToken);
+
+      await signInWithCredential(FIREBASE_AUTH, googleCredential);
+
+      const userFirebase = FIREBASE_AUTH.currentUser;
+      const userDoc = FIRESTORE_DB.collection('users').doc(userFirebase.uid);
+      const userDocSnap = await userDoc.get();
+
+      if (!userDocSnap.exists) {
+        await userDoc.set({
+          email: user.email,
+          fullName: user.name,
+          role: 'user',
+          createdAt: new Date(),
+        });
+      }
+
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Main' }],
+      });
+    } else {
+      console.log('Google sign-in cancelled');
+    }
+  } catch (error) {
+    console.log('Authentication error: ', error.message);
+  }
+};
 
   return (
     <>

@@ -73,10 +73,10 @@ export default function AccountScreen({ navigation }) {
       </View>
       <SizedBox />
       <ScrollView>
-        <ViewAccounts listings={accountMoney} title="Tiền mặt" />
-        <ViewAccounts listings={accountBank} title="Tài khoản ngân hàng" />
-        <ViewAccounts listings={accountWallet} title="Ví điện tử" />
-        <ViewAccounts listings={accountCredit} title="Thẻ tín dụng" />
+        <ViewAccounts listings={accountMoney} title="Tiền mặt" navigation={navigation}/>
+        <ViewAccounts listings={accountBank} title="Tài khoản ngân hàng" navigation={navigation}/>
+        <ViewAccounts listings={accountWallet} title="Ví điện tử" navigation={navigation}/>
+        <ViewAccounts listings={accountCredit} title="Thẻ tín dụng" navigation={navigation}/>
       </ScrollView>
       {Platform.OS === "android" ? (
         <TouchableWithoutFeedback

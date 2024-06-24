@@ -11,11 +11,13 @@ export default function SelectTypeAccScreen({ navigation }) {
 
   const { selecBegin, onselectionchange } = route.params;
 
+  console.log(selecBegin);
+
   const [selectedItem, setSelectedItem] = useState(selecBegin);
   const handleSelectionChange = (selection) => {
     setSelectedItem(selection);
     onselectionchange(selection);
-    navigation.navigate("AddAccount");
+    navigation.goBack();
   };
 
   return (

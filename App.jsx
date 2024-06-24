@@ -1,5 +1,5 @@
 import React, { Component, useState, useEffect, useRef } from "react";
-import 'react-native-gesture-handler';
+import "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
 import {
   View,
@@ -7,6 +7,7 @@ import {
   Animated,
   ActivityIndicator,
   TouchableOpacity,
+  LogBox,
 } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -26,22 +27,24 @@ import AddAccountScreen from "./src/screens/Account/AddAccountScreen";
 import SelectTypeAccScreen from "./src/screens/Account/SelectTypeAccScreen";
 import SelectBankScreen from "./src/screens/Account/SelectBankScreen";
 import SelectDateScreen from "./src/screens/Home/SelectDateScreen";
+import EditAccountScreen from "./src/screens/Account/EditAccountScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { COLORS } from "./src/constants";
 import { Entypo, Ionicons } from "@expo/vector-icons";
-import { useFetchData } from './src/hooks/useFetchData';
+import { useFetchData } from "./src/hooks/useFetchData";
 import { useChange } from "./src/context/ChangeContext";
-import { registerRootComponent } from 'expo';
-import { name as appName } from './app.json';
-import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { registerRootComponent } from "expo";
+import { name as appName } from "./app.json";
+import { gestureHandlerRootHOC } from "react-native-gesture-handler";
 
 registerRootComponent(gestureHandlerRootHOC(App));
 
+LogBox.ignoreAllLogs(true);
 
 import Providers from "./src/context/Providers";
+import EditNoteScreen from "./src/screens/Add/EditNoteScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -51,9 +54,8 @@ const AccountStack = createStackNavigator();
 const SettingStack = createStackNavigator();
 const ReportStack = createStackNavigator();
 
-function HomeStackScreen({navigation}) {
+function HomeStackScreen({ navigation }) {
   return (
-
     <HomeStack.Navigator>
       <HomeStack.Screen
         name="Home"
@@ -85,11 +87,13 @@ function HomeStackScreen({navigation}) {
             </>
           ),
           headerLeft: () => (
-            <TouchableOpacity style={{ paddingLeft: 15 }} onPress={()=> navigation.navigate("Home")}>
+            <TouchableOpacity
+              style={{ paddingLeft: 15 }}
+              onPress={() => navigation.navigate("Home")}
+            >
               <Entypo name="chevron-left" size={28} color={COLORS.white} />
             </TouchableOpacity>
           ),
-        
         }}
       />
       <HomeStack.Screen
@@ -117,30 +121,66 @@ function HomeStackScreen({navigation}) {
             </>
           ),
           headerLeft: () => (
-            <TouchableOpacity style={{ paddingLeft: 15 }} onPress={()=> navigation.navigate("History")}>
+            <TouchableOpacity
+              style={{ paddingLeft: 15 }}
+              onPress={() => navigation.navigate("History")}
+            >
+              <Entypo name="chevron-left" size={28} color={COLORS.white} />
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <HomeStack.Screen
+        name="EditNote"
+        component={EditNoteScreen}
+        options={{
+          headerTitle: "Chỉnh sửa ghi chú",
+          headerTransparent: true,
+          headerTitleStyle: {
+            color: COLORS.white,
+            fontSize: 20,
+            fontWeight: "bold",
+          },
+          headerTitleAlign: "center",
+          headerBackground: () => (
+            <>
+              <View
+                style={{
+                  backgroundColor: COLORS.primary,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  paddingTop: 100,
+                }}
+              ></View>
+            </>
+          ),
+          headerLeft: () => (
+            <TouchableOpacity
+              style={{ paddingLeft: 15 }}
+              onPress={() => navigation.goBack()}
+            >
               <Entypo name="chevron-left" size={28} color={COLORS.white} />
             </TouchableOpacity>
           ),
         }}
       />
     </HomeStack.Navigator>
-
   );
 }
 
-function AddStackScreen() {
+function AddStackScreen({ navigation }) {
   return (
     <AddStack.Navigator>
       <AddStack.Screen
         name="Add"
         component={AddScreen}
-        options={{ headerShown: false}}
+        options={{ headerShown: false }}
       />
     </AddStack.Navigator>
   );
 }
 
-function AccountStackScreen({navigation}) {
+function AccountStackScreen({ navigation }) {
   const headerHeight = useHeaderHeight();
   return (
     <AccountStack.Navigator>
@@ -286,6 +326,41 @@ function AccountStackScreen({navigation}) {
           ),
         }}
       />
+      <AccountStack.Screen
+        name="EditAccount"
+        component={EditAccountScreen}
+        options={{
+          // headerShown: false,
+          headerTitle: "Chỉnh sửa tài khoản",
+          headerTransparent: true,
+          headerTitleStyle: {
+            color: COLORS.white,
+            fontSize: 20,
+            fontWeight: "bold",
+          },
+          headerTitleAlign: "center",
+          headerBackground: () => (
+            <>
+              <View
+                style={{
+                  backgroundColor: COLORS.primary,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  paddingTop: 100,
+                }}
+              ></View>
+            </>
+          ),
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Account")}
+              style={{ paddingLeft: 15 }}
+            >
+              <Entypo name="chevron-left" size={28} color={COLORS.white} />
+            </TouchableOpacity>
+          ),
+        }}
+      />
     </AccountStack.Navigator>
   );
 }
@@ -308,15 +383,39 @@ function ReportStackScreen() {
       <ReportStack.Screen
         name="Report"
         component={ReportScreen}
-        options={{ headerShown: false }}
+        options={{
+          // headerShown: false,
+          headerTitle: "Báo cáo tài chính",
+          headerTransparent: true,
+          headerTitleStyle: {
+            color: COLORS.white,
+            fontSize: 20,
+            fontWeight: "bold",
+          },
+          headerTitleAlign: "center",
+          headerBackground: () => (
+            <>
+              <View
+                style={{
+                  backgroundColor: COLORS.primary,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  paddingTop: 100,
+                }}
+              ></View>
+            </>
+          ),
+          headerLeft: () => <></>,
+        }}
       />
     </ReportStack.Navigator>
   );
 }
 
 const MainTabScreen = () => {
-  const {change, setChange} = useChange();
-  const { userData, noteData, accountData, loading, error } = useFetchData(change);
+  const { change, setChange } = useChange();
+  const { userData, noteData, accountData, loading, error } =
+    useFetchData(change);
 
   const scaleValue = useRef(new Animated.Value(1)).current;
 
@@ -459,8 +558,6 @@ const MainTabScreen = () => {
   );
 };
 
-
-
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [userDocId, setUserDocId] = useState(null);
@@ -480,28 +577,46 @@ export default function App() {
     checkUserDocId();
   }, []);
 
-
   if (isLoading) {
     return null; // hoặc một ActivityIndicator để hiển thị khi đang tải
   }
 
   return (
     <Providers>
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Loading">
-        <Stack.Screen name="Loading" component={LoadingScreen} options={{headerShown:false}}/>
-        <Stack.Screen name="Welcome" component={WelcomeScreen} options={{headerShown:false}}/>
-        <Stack.Screen name="SignIn" component={SignInScreen} options={{headerShown:false}}/>
-        <Stack.Screen name="SignUp" component={SignUpScreen} options={{headerShown:false}}/>
-        <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{headerShown:false}}/>
-        <Stack.Screen
-          name="Main"
-          component={MainTabScreen}
-          options={{ headerShown: false }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Loading">
+          <Stack.Screen
+            name="Loading"
+            component={LoadingScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Welcome"
+            component={WelcomeScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="SignIn"
+            component={SignInScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="SignUp"
+            component={SignUpScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="ForgotPassword"
+            component={ForgotPasswordScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Main"
+            component={MainTabScreen}
+            options={{ headerShown: false }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
     </Providers>
   );
-
 }
