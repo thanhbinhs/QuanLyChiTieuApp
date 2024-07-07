@@ -6,8 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Entypo, Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { COLORS } from '../constants';
 
-export default function SettingScreen() {
-  const navigation = useNavigation();
+export default function SettingScreen({navigation}) {
 
   const signOut = async() =>{
     // Xử lý đăng xuất
@@ -35,26 +34,26 @@ export default function SettingScreen() {
       </View>
 
       <View style={[styles.flexRow,{flexDirection:'column', alignItems:'flex-start', padding:0}]}>
-        <View style={styles.row}>
+        <TouchableOpacity style={styles.row} onPress={() => navigation.navigate("UserSetting")}>
         <Ionicons name="person" size={28} color={COLORS.primary} />
         <Text style={{fontSize:18, color:COLORS.black, paddingLeft:10}}>Tài khoản</Text>
-        </View>
-        <View style={styles.row}>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.row} onPress={() => navigation.navigate("Security")}>
         <Ionicons name="lock-closed-outline" size={28} color={COLORS.primary} />
         <Text style={{fontSize:18, color:COLORS.black, paddingLeft:10}}>Bảo mật & Quyền riêng tư</Text>
-        </View>
-        <View style={styles.row}>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.row} onPress={()=> navigation.navigate("NotifySetting")}>
         <Ionicons name="notifications" size={28} color={COLORS.primary} />
         <Text style={{fontSize:18, color:COLORS.black, paddingLeft:10}}>Thông báo</Text>
-        </View>
-        <View style={styles.row}>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.row} onPress={()=> navigation.navigate("Support")}>
         <Feather name="help-circle" size={28} color={COLORS.primary} />
         <Text style={{fontSize:18, color:COLORS.black, paddingLeft:10}}>Hỗ trợ</Text>
-        </View>
-        <View style={[styles.row,{borderBottomWidth:0}]}>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.row,{borderBottomWidth:0}]} onPress={()=> navigation.navigate("Feedback")}>
         <MaterialCommunityIcons name="email-newsletter" size={28} color={COLORS.primary} />
         <Text style={{fontSize:18, color:COLORS.black, paddingLeft:10}}>Góp ý nhà phát triển</Text>
-        </View>
+        </TouchableOpacity>
       </View>
 
       <View style={[styles.flexRow, {marginBottom:20}]}>

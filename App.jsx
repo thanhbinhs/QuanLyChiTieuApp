@@ -28,6 +28,11 @@ import SelectTypeAccScreen from "./src/screens/Account/SelectTypeAccScreen";
 import SelectBankScreen from "./src/screens/Account/SelectBankScreen";
 import SelectDateScreen from "./src/screens/Home/SelectDateScreen";
 import EditAccountScreen from "./src/screens/Account/EditAccountScreen";
+import UserSettingScreen from "./src/screens/Setting/UserSettingScreen";
+import SupportScreen from "./src/screens/Setting/SupportScreen";
+import SecurityScreen from "./src/screens/Setting/SecurityScreen";
+import NotifySettingScreen from "./src/screens/Setting/NotifySettingScreen";
+import FeedbackScreen from "./src/screens/Setting/FeedbackScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useHeaderHeight } from "@react-navigation/elements";
@@ -373,7 +378,65 @@ function SettingStackScreen() {
         component={SettingScreen}
         options={{ headerShown: false }}
       />
+      <SettingStack.Screen
+        name = "UserSetting"
+        component = {UserSettingScreen}
+        options={{
+          // headerShown: false,
+          headerTitle: "Thong tin ca nhan",
+          headerTransparent: true,
+          headerTitleStyle: {
+            color: COLORS.white,
+            fontSize: 20,
+            fontWeight: "bold",
+          },
+          headerTitleAlign: "center",
+          headerBackground: () => (
+            <>
+              <View
+                style={{
+                  backgroundColor: COLORS.primary,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  paddingTop: 100,
+                }}
+              ></View>
+            </>
+          ),
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Account")}
+              style={{ paddingLeft: 15 }}
+            >
+              <Entypo name="chevron-left" size={28} color={COLORS.white} />
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <SettingStack.Screen
+        name = "Security"
+        component = {SecurityScreen}
+        options = {{headerShown: false}}
+      />
+      <SettingStack.Screen
+
+        name = "NotifySetting"  
+        component = {NotifySettingScreen}
+        options = {{headerShown: false}}
+      />
+      <SettingStack.Screen
+        name = "Support"
+        component = {SupportScreen}
+        options = {{headerShown: false}}
+      />
+      <SettingStack.Screen
+        name = "Feedback"
+        component = {FeedbackScreen}
+        options = {{headerShown: false}}
+      />
+
     </SettingStack.Navigator>
+
   );
 }
 
