@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   LogBox,
+  AppRegistry,
 } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -42,7 +43,6 @@ import { Entypo, Ionicons } from "@expo/vector-icons";
 import { useFetchData } from "./src/hooks/useFetchData";
 import { useChange } from "./src/context/ChangeContext";
 import { registerRootComponent } from "expo";
-import { name as appName } from "./app.json";
 import { gestureHandlerRootHOC } from "react-native-gesture-handler";
 
 registerRootComponent(gestureHandlerRootHOC(App));
@@ -780,6 +780,7 @@ const MainTabScreen = () => {
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [userDocId, setUserDocId] = useState(null);
+  
 
   useEffect(() => {
     const checkUserDocId = async () => {

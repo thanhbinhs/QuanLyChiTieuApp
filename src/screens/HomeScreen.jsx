@@ -6,6 +6,9 @@ import {
   ScrollView,
   TouchableOpacity,
   ActivityIndicator,
+  Alert,
+  Image,
+  Platform
 } from "react-native";
 import { FIREBASE_AUTH, FIRESTORE_DB } from "../components/FirebaseConfig";
 import { doc, getDoc, collection, getDocs } from "firebase/firestore";
@@ -18,6 +21,9 @@ import { useChange } from "../context/ChangeContext";
 import { useFetchData } from "../hooks/useFetchData";
 import SwipeableItem from "../components/SwipeableItem";
 import { filterTodayNotes, groupNotesByDate } from "../global/functions";
+import * as Zendesk from 'react-native-zendesk-messaging-enhanced';
+
+const CHANNEL_KEY = 'YOUR_ZENDESK_CHANNEL_KEY';
 
 const HomeScreen = ({ navigation }) => {
   const [isshow, setIsshow] = useState(false);
@@ -30,6 +36,34 @@ const HomeScreen = ({ navigation }) => {
   const todayNotes = filterTodayNotes(noteData);
   // Nhóm các ghi chú đã lọc theo ngày
   var groupedNotes = groupNotesByDate(todayNotes);
+
+  useEffect(() => {
+    Zendesk.initialize({ channelKey: CHANNEL_KEY })
+      .then(() => /* success */{})
+      .catch((error) => /* failure */{});
+  }, []);
+
+  const handlePressOpenButton = () => {
+    Zendesk.openMessagingView();
+  };
+
+  const chatBotBtn = () => (
+    <TouchableOpacity
+      onPress={() => handlePressOpenButton()}
+      style={{
+        position: "absolute",
+        bottom: 20,
+        right: 20,
+        width: 60,
+        height: 60,
+      }}
+    >
+      <Image
+        style={{ height: 60, width: 60, borderRadius: 30 }}
+        source={require("../assets/chatbot.jpg")}
+      />
+    </TouchableOpacity>
+  );
 
   return (
     <>
@@ -121,7 +155,7 @@ const HomeScreen = ({ navigation }) => {
                     >
                       {date}
                     </Text>
-                    <Text style={{fontSize:24}}>
+                    <Text style={{ fontSize: 24 }}>
                       {groupedNotes[date].total.toLocaleString("en-US")} đ
                     </Text>
                   </View>
@@ -143,6 +177,7 @@ const HomeScreen = ({ navigation }) => {
             <SizedBox />
             <RateTables />
           </ScrollView>
+          {chatBotBtn()}
         </>
       ) : (
         <View
