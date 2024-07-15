@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Alert,
+  Platform,
 } from "react-native";
 import {
   connectAuthEmulator,
@@ -163,14 +164,25 @@ const SignupScreen = ({ navigation }) => {
               flexDirection: "row",
               paddingLeft: 36,
               alignItems: "center",
+              marginTop: 8,
             }}
           >
             <Text>Đã có tài khoản</Text>
-            <Button
-              title="ĐĂNG NHẬP"
-              style={{ color: COLORS.primary }}
-              onPress={() => navigation.navigate("SignIn")}
-            />
+            
+            {Platform.OS === "ios" ? (
+                <Button
+                  title="ĐĂNG NHẬP"
+                  style={{ color: COLORS.primary }}
+                  onPress={() => navigation.navigate("SignIn")}
+                />
+              ) : (
+                <Text
+                  style={{ color: COLORS.primary, marginLeft: 4 }}
+                  onPress={() => navigation.navigate("SignIn")}
+                >
+                  ĐĂNG NHẬP
+                </Text>
+              )}
           </View>
           <TouchableOpacity
             style={[styles.button, { backgroundColor: COLORS.black }]}

@@ -8,14 +8,19 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ActivityIndicator,
-  Alert
+  Alert,
+  Platform,
 } from "react-native";
-import {  signInWithEmailAndPassword, OAuthProvider, signInWithCredential  } from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  OAuthProvider,
+  signInWithCredential,
+} from "firebase/auth";
 import { FIREBASE_AUTH, FIRESTORE_DB } from "../../components/FirebaseConfig";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../../constants";
-import * as AppleAuthentication from 'expo-apple-authentication';
+import * as AppleAuthentication from "expo-apple-authentication";
 
 const SignInScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -23,8 +28,6 @@ const SignInScreen = ({ navigation }) => {
   const [error, setError] = useState("");
   const [isshowPass, setIsShowPass] = useState(false);
   const [data, isData] = useState(true);
-
-
 
   const handleSignIn = async () => {
     isData(false);
@@ -38,7 +41,7 @@ const SignInScreen = ({ navigation }) => {
       console.log("User document ID stored in AsyncStorage", userDocId);
       navigation.reset({
         index: 0,
-        routes: [{ name: 'Main' }],
+        routes: [{ name: "Main" }],
       });
     } catch (error) {
       isData(true);
@@ -49,12 +52,17 @@ const SignInScreen = ({ navigation }) => {
           "Email hoặc Mật khẩu không đúng. Vui lòng thử lại."
         );
         return;
-      }else if(error.code === "auth/too-many-requests"){
+      } else if (error.code === "auth/too-many-requests") {
         Alert.alert(
           "Thông báo",
           "Bạn đã đăng nhập quá nhiều lần. Vui lòng thử lại sau vài phút!"
         );
         return;
+      } else if (error.code === "auth/wrong-password") {
+        Alert.alert(
+          "Thông báo",
+          "Tài khoản hoặc mật khẩu không đúng. Vui lòng thử lại!"
+        );
       }
     }
   };
@@ -68,22 +76,22 @@ const SignInScreen = ({ navigation }) => {
           AppleAuthentication.AppleAuthenticationScope.EMAIL,
         ],
       });
-  
+
       const { identityToken, email, fullName } = credential;
-  
+
       // Xác thực với Firebase
-      const provider = new OAuthProvider('apple.com');
+      const provider = new OAuthProvider("apple.com");
       const appleCredential = provider.credential({
         idToken: identityToken,
         rawNonce: null, // Nếu cần thiết có thể thêm rawNonce
       });
-  
+
       await signInWithCredential(FIREBASE_AUTH, appleCredential);
-  
+
       const user = FIREBASE_AUTH.currentUser;
       const userDoc = FIRESTORE_DB.collection("users").doc(user.uid);
       const userDocSnap = await userDoc.get();
-  
+
       // Nếu user chưa tồn tại, tạo mới user
       if (!userDocSnap.exists) {
         await userDoc.set({
@@ -93,185 +101,196 @@ const SignInScreen = ({ navigation }) => {
           createdAt: new Date(),
         });
       }
-  
+
       // Điều hướng đến màn hình chính
       navigation.reset({
         index: 0,
-        routes: [{ name: 'Main' }],
+        routes: [{ name: "Main" }],
       });
     } catch (error) {
       console.log("Authentication error: ", error.message);
     }
-  }
+  };
 
+  const loginWithGoogle = async () => {
+    try {
+      // Cấu hình Google sign-in
+      const config = {
+        iosClientId: Constants.manifest.extra.googleAuth.iosClientId,
+        androidClientId: Constants.manifest.extra.googleAuth.androidClientId,
+        expoClientId: Constants.manifest.extra.googleAuth.expoClientId,
+      };
 
-const loginWithGoogle = async () => {
+      const result = await Google.logInAsync(config);
 
-  try {
-    // Cấu hình Google sign-in
-    const config = {
-      iosClientId: Constants.manifest.extra.googleAuth.iosClientId,
-      androidClientId: Constants.manifest.extra.googleAuth.androidClientId,
-      expoClientId: Constants.manifest.extra.googleAuth.expoClientId,
-    };
+      if (result.type === "success") {
+        const { idToken, accessToken, user } = result;
+        const provider = new OAuthProvider("google.com");
+        const googleCredential = provider.credential(idToken);
 
-    const result = await Google.logInAsync(config);
+        await signInWithCredential(FIREBASE_AUTH, googleCredential);
 
-    if (result.type === 'success') {
-      const { idToken, accessToken, user } = result;
-      const provider = new OAuthProvider('google.com');
-      const googleCredential = provider.credential(idToken);
+        const userFirebase = FIREBASE_AUTH.currentUser;
+        const userDoc = FIRESTORE_DB.collection("users").doc(userFirebase.uid);
+        const userDocSnap = await userDoc.get();
 
-      await signInWithCredential(FIREBASE_AUTH, googleCredential);
+        if (!userDocSnap.exists) {
+          await userDoc.set({
+            email: user.email,
+            fullName: user.name,
+            role: "user",
+            createdAt: new Date(),
+          });
+        }
 
-      const userFirebase = FIREBASE_AUTH.currentUser;
-      const userDoc = FIRESTORE_DB.collection('users').doc(userFirebase.uid);
-      const userDocSnap = await userDoc.get();
-
-      if (!userDocSnap.exists) {
-        await userDoc.set({
-          email: user.email,
-          fullName: user.name,
-          role: 'user',
-          createdAt: new Date(),
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "Main" }],
         });
+      } else {
+        console.log("Google sign-in cancelled");
       }
-
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'Main' }],
-      });
-    } else {
-      console.log('Google sign-in cancelled');
+    } catch (error) {
+      console.log("Authentication error: ", error.message);
     }
-  } catch (error) {
-    console.log('Authentication error: ', error.message);
-  }
-};
+  };
 
   return (
     <>
       <SafeAreaView style={styles.container}>
         {data ? (
-        <View>
-        <Text style={styles.title}>Chào mừng tới App</Text>
-        <Text style={{ marginBottom: 24, textAlign: "center" }}>
-          Đăng nhập
-        </Text>
-        <TextInput
-          placeholder="Email"
-          style={styles.input}
-          value={email}
-          onChangeText={setEmail}
-        />
-        <View>
-          <TextInput
-            placeholder="Mật khẩu"
-            style={styles.input}
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry={isshowPass ? false : true}
-          />
-          {isshowPass ? (
-            <Ionicons
-              name="eye-off"
-              size={24}
-              color={COLORS.grey}
-              style={{ position: "absolute", right: 50, top: 12 }}
-              onPress={() => setIsShowPass(!isshowPass)}
+          <View>
+            <Text style={styles.title}>Chào mừng tới App</Text>
+            <Text style={{ marginBottom: 24, textAlign: "center" }}>
+              Đăng nhập
+            </Text>
+            <TextInput
+              placeholder="Email"
+              style={styles.input}
+              value={email}
+              onChangeText={setEmail}
             />
-          ) : (
-            <Ionicons
-              name="eye"
-              size={24}
-              color={COLORS.grey}
-              style={{ position: "absolute", right: 50, top: 12 }}
-              onPress={() => setIsShowPass(!isshowPass)}
-            />
-          )}
-        </View>
-        <Text
-          style={{ textAlign: "right", paddingRight: 36 }}
-          onPress={() => navigation.navigate("ForgotPassword")}
-        >
-          Quên mật khẩu?
-        </Text>
-        <TouchableOpacity
-          style={{
-            backgroundColor: COLORS.primary,
-            alignItems: "center",
-            padding: 12,
-            width: 320,
-            alignSelf: "center",
-            borderRadius: 20,
-            marginTop: 24,
-          }}
-          onPress={handleSignIn}
-        >
-          <Text style={{color:COLORS.white, fontSize:16}}>ĐĂNG NHẬP</Text>
-        </TouchableOpacity>
-        <View style={{ flexDirection: "row", paddingLeft:36,  alignItems:'center' }}>
-          <Text>Chưa có tài khoản?</Text>
-          <Button
-            title="ĐĂNG KÝ"
-            style={{ color: COLORS.primary }}
-            onPress={() => navigation.navigate("SignUp")}
-          />
-        </View>
-        <TouchableOpacity
-          style={[styles.button, { backgroundColor:COLORS.black }]}
-          onPress={loginWithApple}
-        >
-          <Ionicons
-            name="logo-apple"
-            size={24}
-            color="white"
-            style={{
-              marginRight:10,
-              borderRadius: 20,
-              alignSelf: "center",
-            }}
-          />
-          <Text style={{ color:COLORS.white }}>
-            Đăng nhập bằng APPLE
-          </Text>
-        </TouchableOpacity>
+            <View>
+              <TextInput
+                placeholder="Mật khẩu"
+                style={styles.input}
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry={isshowPass ? false : true}
+              />
+              {isshowPass ? (
+                <Ionicons
+                  name="eye-off"
+                  size={24}
+                  color={COLORS.grey}
+                  style={{ position: "absolute", right: 50, top: 12 }}
+                  onPress={() => setIsShowPass(!isshowPass)}
+                />
+              ) : (
+                <Ionicons
+                  name="eye"
+                  size={24}
+                  color={COLORS.grey}
+                  style={{ position: "absolute", right: 50, top: 12 }}
+                  onPress={() => setIsShowPass(!isshowPass)}
+                />
+              )}
+            </View>
+            <Text
+              style={{ textAlign: "right", paddingRight: 36 }}
+              onPress={() => navigation.navigate("ForgotPassword")}
+            >
+              Quên mật khẩu?
+            </Text>
+            <TouchableOpacity
+              style={{
+                backgroundColor: COLORS.primary,
+                alignItems: "center",
+                padding: 12,
+                width: 320,
+                alignSelf: "center",
+                borderRadius: 20,
+                marginTop: 24,
+              }}
+              onPress={handleSignIn}
+            >
+              <Text style={{ color: COLORS.white, fontSize: 16 }}>
+                ĐĂNG NHẬP
+              </Text>
+            </TouchableOpacity>
+            <View
+              style={{
+                flexDirection: "row",
+                paddingLeft: 36,
+                alignItems: "center",
+                marginTop: 8,
+              }}
+            >
+              <Text>Chưa có tài khoản?</Text>
+              {Platform.OS === "ios" ? (
+                <Button
+                  title="ĐĂNG KÝ"
+                  style={{ color: COLORS.primary }}
+                  onPress={() => navigation.navigate("SignUp")}
+                />
+              ) : (
+                <Text
+                  style={{ color: COLORS.primary, marginLeft: 4 }}
+                  onPress={() => navigation.navigate("SignUp")}
+                >
+                  ĐĂNG KÝ
+                </Text>
+              )}
+            </View>
+            <TouchableOpacity
+              style={[styles.button, { backgroundColor: COLORS.black }]}
+              onPress={loginWithApple}
+            >
+              <Ionicons
+                name="logo-apple"
+                size={24}
+                color="white"
+                style={{
+                  marginRight: 10,
+                  borderRadius: 20,
+                  alignSelf: "center",
+                }}
+              />
+              <Text style={{ color: COLORS.white }}>Đăng nhập bằng APPLE</Text>
+            </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[styles.button, { backgroundColor:COLORS.white}]}
-        >
-          <Ionicons
-            name="logo-google"
-            size={24}
-            color="black"
-            style={{
-              marginRight:10,
-              borderRadius: 20,
-              alignSelf: "center",
-            }}
-          />
-          <Text style={{ textAlign: "center"}}>
-            Đăng nhập bằng GOOGLE
-          </Text>
-        </TouchableOpacity>
-      </View>
-        ):(
+            <TouchableOpacity
+              style={[styles.button, { backgroundColor: COLORS.white }]}
+            >
+              <Ionicons
+                name="logo-google"
+                size={24}
+                color="black"
+                style={{
+                  marginRight: 10,
+                  borderRadius: 20,
+                  alignSelf: "center",
+                }}
+              />
+              <Text style={{ textAlign: "center" }}>Đăng nhập bằng GOOGLE</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
           <View
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          backgroundColor: "rgba(0,0,0,0.5)",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <ActivityIndicator size="large" color={COLORS.primary} />
-      </View>
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              backgroundColor: "rgba(0,0,0,0.5)",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <ActivityIndicator size="large" color={COLORS.primary} />
+          </View>
         )}
-
       </SafeAreaView>
     </>
   );
@@ -309,17 +328,17 @@ const styles = StyleSheet.create({
     marginTop: 16,
     textAlign: "center",
   },
-  button:{
+  button: {
     backgroundColor: COLORS.black,
     alignItems: "center",
     justifyContent: "center",
-    flexDirection:'row',
+    flexDirection: "row",
     borderRadius: 20,
-    paddingVertical:10,
-    width:320,
-    alignSelf:'center',
-    marginTop:16
-  }
+    paddingVertical: 10,
+    width: 320,
+    alignSelf: "center",
+    marginTop: 16,
+  },
 });
 
 export default SignInScreen;

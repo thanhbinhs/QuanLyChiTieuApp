@@ -33,6 +33,7 @@ import SupportScreen from "./src/screens/Setting/SupportScreen";
 import SecurityScreen from "./src/screens/Setting/SecurityScreen";
 import NotifySettingScreen from "./src/screens/Setting/NotifySettingScreen";
 import FeedbackScreen from "./src/screens/Setting/FeedbackScreen";
+import ChatBotScreen from "./src/screens/Home/ChatBotScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useHeaderHeight } from "@react-navigation/elements";
@@ -163,6 +164,41 @@ function HomeStackScreen({ navigation }) {
             <TouchableOpacity
               style={{ paddingLeft: 15 }}
               onPress={() => navigation.goBack()}
+            >
+              <Entypo name="chevron-left" size={28} color={COLORS.white} />
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <HomeStack.Screen
+        name="ChatBot"
+        component={ChatBotScreen}
+        options={{
+          // headerShown: false,
+          headerTitle: "AppBot",
+          headerTransparent: true,
+          headerTitleStyle: {
+            color: COLORS.white,
+            fontSize: 20,
+            fontWeight: "bold",
+          },
+          headerTitleAlign: "center",
+          headerBackground: () => (
+            <>
+              <View
+                style={{
+                  backgroundColor: COLORS.primary,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  paddingTop: 100,
+                }}
+              ></View>
+            </>
+          ),
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Home")}
+              style={{ paddingLeft: 15 }}
             >
               <Entypo name="chevron-left" size={28} color={COLORS.white} />
             </TouchableOpacity>
@@ -370,7 +406,7 @@ function AccountStackScreen({ navigation }) {
   );
 }
 
-function SettingStackScreen() {
+function SettingStackScreen({navigation}) {
   return (
     <SettingStack.Navigator>
       <SettingStack.Screen
@@ -383,7 +419,7 @@ function SettingStackScreen() {
         component = {UserSettingScreen}
         options={{
           // headerShown: false,
-          headerTitle: "Thong tin ca nhan",
+          headerTitle: "Thông tin cá nhân",
           headerTransparent: true,
           headerTitleStyle: {
             color: COLORS.white,
@@ -405,7 +441,7 @@ function SettingStackScreen() {
           ),
           headerLeft: () => (
             <TouchableOpacity
-              onPress={() => navigation.navigate("Account")}
+              onPress={() => navigation.navigate("Setting")}
               style={{ paddingLeft: 15 }}
             >
               <Entypo name="chevron-left" size={28} color={COLORS.white} />
@@ -416,23 +452,143 @@ function SettingStackScreen() {
       <SettingStack.Screen
         name = "Security"
         component = {SecurityScreen}
-        options = {{headerShown: false}}
+        options={{
+          // headerShown: false,
+          headerTitle: "Bảo mật và riêng tư",
+          headerTransparent: true,
+          headerTitleStyle: {
+            color: COLORS.white,
+            fontSize: 20,
+            fontWeight: "bold",
+          },
+          headerTitleAlign: "center",
+          headerBackground: () => (
+            <>
+              <View
+                style={{
+                  backgroundColor: COLORS.primary,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  paddingTop: 100,
+                }}
+              ></View>
+            </>
+          ),
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Setting")}
+              style={{ paddingLeft: 15 }}
+            >
+              <Entypo name="chevron-left" size={28} color={COLORS.white} />
+            </TouchableOpacity>
+          ),
+        }}
       />
       <SettingStack.Screen
 
         name = "NotifySetting"  
         component = {NotifySettingScreen}
-        options = {{headerShown: false}}
+        options={{
+          // headerShown: false,
+          headerTitle: "Cài đặt thông báo",
+          headerTransparent: true,
+          headerTitleStyle: {
+            color: COLORS.white,
+            fontSize: 20,
+            fontWeight: "bold",
+          },
+          headerTitleAlign: "center",
+          headerBackground: () => (
+            <>
+              <View
+                style={{
+                  backgroundColor: COLORS.primary,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  paddingTop: 100,
+                }}
+              ></View>
+            </>
+          ),
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Setting")}
+              style={{ paddingLeft: 15 }}
+            >
+              <Entypo name="chevron-left" size={28} color={COLORS.white} />
+            </TouchableOpacity>
+          ),
+        }}
       />
       <SettingStack.Screen
         name = "Support"
         component = {SupportScreen}
-        options = {{headerShown: false}}
+        options={{
+          // headerShown: false,
+          headerTitle: "Hỗ trợ và trợ giúp",
+          headerTransparent: true,
+          headerTitleStyle: {
+            color: COLORS.white,
+            fontSize: 20,
+            fontWeight: "bold",
+          },
+          headerTitleAlign: "center",
+          headerBackground: () => (
+            <>
+              <View
+                style={{
+                  backgroundColor: COLORS.primary,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  paddingTop: 100,
+                }}
+              ></View>
+            </>
+          ),
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Setting")}
+              style={{ paddingLeft: 15 }}
+            >
+              <Entypo name="chevron-left" size={28} color={COLORS.white} />
+            </TouchableOpacity>
+          ),
+        }}
       />
       <SettingStack.Screen
         name = "Feedback"
         component = {FeedbackScreen}
-        options = {{headerShown: false}}
+        options={{
+          // headerShown: false,
+          headerTitle: "Góp ý và phản hồi",
+          headerTransparent: true,
+          headerTitleStyle: {
+            color: COLORS.white,
+            fontSize: 20,
+            fontWeight: "bold",
+          },
+          headerTitleAlign: "center",
+          headerBackground: () => (
+            <>
+              <View
+                style={{
+                  backgroundColor: COLORS.primary,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  paddingTop: 100,
+                }}
+              ></View>
+            </>
+          ),
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Setting")}
+              style={{ paddingLeft: 15 }}
+            >
+              <Entypo name="chevron-left" size={28} color={COLORS.white} />
+            </TouchableOpacity>
+          ),
+        }}
       />
 
     </SettingStack.Navigator>
