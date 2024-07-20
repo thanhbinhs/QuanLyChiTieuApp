@@ -127,9 +127,7 @@ export default function ExpenseAIncome({ listing, navigation }) {
             />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity>
-          <Ionicons name="settings" size={24} color={COLORS.grey} />
-        </TouchableOpacity>
+
       </View>
 
       {listing != [] ? (

@@ -15,6 +15,7 @@ const UserInfoItem = ({ label, value, onChange, isEditing, secureTextEntry }) =>
           onChangeText={onChange} 
           editable={isEditing} 
           secureTextEntry={secureTextEntry && !isPasswordVisible} 
+          clearButtonMode='true'
         />
         {secureTextEntry && (
           <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
@@ -42,11 +43,10 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
     padding: 10,
     borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#ddd',
+    borderBottomWidth: 1,
+    borderBottomColor: 'grey',
   },
   input: {
     flex: 1,

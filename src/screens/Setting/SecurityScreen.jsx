@@ -1,23 +1,26 @@
-import { View, Text, StyleSheet, Button, Alert } from 'react-native';
-import React from 'react';
+import { View, Text, StyleSheet, Button, Alert } from "react-native";
+import React, { useContext } from "react";
+import { Switch } from "react-native";
+import SecurityContext from "../../context/SecurityContext";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function SecurityScreen() {
+  const { isAuthenEnabled, toggleAuthen } = useContext(SecurityContext);
 
-  const handleTwoFactorAuth = () => {
-    Alert.alert('Two-Factor Authentication', 'Two-Factor Authentication setup will be implemented here.');
-  };
+  console.log("toggleAuthen", toggleAuthen);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Security Settings</Text>
-      <Text style={styles.description}>
-        Manage your security settings here.
-      </Text>
+      <Text style={styles.header}>BẢO MẬT</Text>
       <View style={styles.buttonContainer}>
-        <Button
-          title="Two-Factor Authentication"
-          onPress={handleTwoFactorAuth}
-          
+        <Ionicons name="lock-closed" size={28} color="grey" />
+        <Text style={{ fontSize: 18, marginHorizontal: 10 }}>
+          Mật khẩu ứng dụng
+        </Text>
+        <Switch
+          onValueChange={toggleAuthen}
+          value={isAuthenEnabled}
+          style={{ marginLeft: "auto" }}
         />
       </View>
     </View>
@@ -27,23 +30,24 @@ export default function SecurityScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    marginTop: 120,
     padding: 16,
-    backgroundColor: '#f8f8f8',
+    backgroundColor: "#f8f8f8",
   },
   header: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 20,
+    fontWeight: "bold",
     marginBottom: 16,
   },
   description: {
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 32,
   },
   buttonContainer: {
-    width: '80%',
+    width: "100%",
+    alignItems: "center",
+    flexDirection: "row",
     marginBottom: 16,
   },
 });

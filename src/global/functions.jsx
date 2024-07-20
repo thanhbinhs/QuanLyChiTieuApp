@@ -1,4 +1,4 @@
-import { parseISO, format, getMonth, getYear, startOfWeek, endOfWeek, isSameDay, isWithinInterval } from "date-fns";
+import { parseISO, format, getMonth, getYear, startOfWeek, endOfWeek, isSameDay, isWithinInterval, startOfMonth, endOfMonth  } from "date-fns";
 
 export const timestampToDate = (timestamp) => {
   if (
@@ -83,6 +83,7 @@ export const getDayOfWeekFromDateString = (dateString) => {
   return date && !isNaN(date) ? daysOfWeek[date.getDay()] : "";
 };
 
+
 // Hàm để lọc các ghi chú của tháng hiện tại
 
 export const filterCurrentMonthNotes = (notes) => {
@@ -114,3 +115,47 @@ export const filterTodayNotes = (notes) => {
     });
   };
 
+// Hàm để lọc các ghi chú theo ngày bất kỳ
+export const filterNotesByDate = (notes, specificDate) => {
+  const dateToCompare = new Date(specificDate); // Chuyển đổi chuỗi ngày cụ thể sang Date object
+  return notes.filter(note => {
+    const noteDate = timestampToDate(note.createdAt);
+    return noteDate && isSameDay(noteDate, dateToCompare);
+  });
+};
+
+// Hàm để lọc các ghi chú theo số tuần của năm
+export const filterNotesByWeek = (notes, weekNumber, year) => {
+  const firstDayOfYear = new Date(year, 0, 1);
+  const firstWeekStart = startOfWeek(firstDayOfYear, { weekStartsOn: 1 });
+  const weekStart = new Date(firstWeekStart.setDate(firstWeekStart.getDate() + (weekNumber - 1) * 7));
+  const weekEnd = endOfWeek(weekStart, { weekStartsOn: 1 });
+
+  return notes.filter(note => {
+    const noteDate = timestampToDate(note.createdAt);
+    return noteDate >= weekStart && noteDate <= weekEnd;
+  });
+};
+
+
+// Hàm để lọc các ghi chú theo tháng
+export const filterNotesByMonth = (notes, year, month) => {
+  const start = startOfMonth(new Date(year, month - 1)); // month - 1 vì tháng trong JavaScript bắt đầu từ 0
+  const end = endOfMonth(new Date(year, month - 1));
+  
+  return notes.filter(note => {
+    const noteDate = timestampToDate(note.createdAt);
+    return isWithinInterval(noteDate, { start, end });
+  });
+};
+
+// Hàm để lọc các ghi chú theo khoảng ngày tùy chọn
+export const filterNotesByCustomRange = (notes, startDate, endDate) => {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+
+  return notes.filter(note => {
+    const noteDate = timestampToDate(note.createdAt);
+    return isWithinInterval(noteDate, { start, end });
+  });
+};

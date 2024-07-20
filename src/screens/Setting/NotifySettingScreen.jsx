@@ -17,16 +17,15 @@ export default function NotifySettingScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Notification Settings</Text>
       <View style={styles.setting}>
-        <Text style={styles.settingText}>Email Notifications</Text>
+        <Text style={styles.settingText}>Cho phép thông báo từ Email</Text>
         <Switch
           onValueChange={toggleEmailNotifications}
           value={isEmailNotificationsEnabled}
         />
       </View>
       <View style={styles.setting}>
-        <Text style={styles.settingText}>Push Notifications</Text>
+        <Text style={styles.settingText}>Cho phép thông báo từ ứng dụng</Text>
         <Switch
           onValueChange={togglePushNotifications}
           value={isPushNotificationsEnabled}
@@ -39,8 +38,7 @@ export default function NotifySettingScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    marginTop:120,
     padding: 16,
     backgroundColor: '#f8f8f8',
   },
@@ -53,7 +51,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    width: '80%',
     marginBottom: 16,
   },
   settingText: {

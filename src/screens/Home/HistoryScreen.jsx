@@ -19,9 +19,10 @@ import { ScrollView } from "react-native-gesture-handler";
 import {
   groupNotesByDate,
   getDayOfWeekFromDateString,
-  filterCurrentMonthNotes,
-  filterCurrentWeekNotes,
   filterTodayNotes,
+  filterNotesByDate,
+  filterNotesByWeek,
+  filterNotesByMonth,
 } from "../../global/functions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FIRESTORE_DB } from "../../components/FirebaseConfig";
@@ -38,19 +39,34 @@ export default function HistoryScreen({ navigation }) {
   const [show, setShow] = useState(false);
   const [selectedItemId, setSelectedItemId] = useState(null);
 
-  if (time === "Tháng này") {
-    const currentMonthNotes = filterCurrentMonthNotes(noteData);
-    // Nhóm các ghi chú đã lọc theo ngày
-    var groupedNotes = groupNotesByDate(currentMonthNotes);
-  } else if (time === "Tuần này") {
-    const currentWeekNotes = filterCurrentWeekNotes(noteData);
-    // Nhóm các ghi chú đã lọc theo ngày
-    var groupedNotes = groupNotesByDate(currentWeekNotes);
-  } else if (time === "Hôm nay") {
+ if (time === "Hôm nay") {
     const todayNotes = filterTodayNotes(noteData);
     // Nhóm các ghi chú đã lọc theo ngày
     var groupedNotes = groupNotesByDate(todayNotes);
+  } else if (/\d{4}-\d{2}-\d{2}/.test(time)){
+    const selectedDateNotes = filterNotesByDate(noteData, time);
+    // Nhóm các ghi chú đã lọc theo ngày
+    var groupedNotes = groupNotesByDate(selectedDateNotes);
+  } else if (/\d+-\d{4}/.test(time)) {
+    // Nếu time là số tuần và năm
+    const [weekNumber, year] = time.split('-').map(Number);
+    selectedDateNotes = filterNotesByWeek(noteData,weekNumber, year);
+    // Nhóm các ghi chú đã lọc theo ngày
+    var groupedNotes = groupNotesByDate(selectedDateNotes);
+  }else if (/\d{4}-\d{2}/.test(time)) {
+    // Nếu time là tháng và năm
+    const [year, month] = time.split('-').map(Number);
+    selectedDateNotes = filterNotesByMonth(noteData, year, month);
+    groupedNotes = groupNotesByDate(selectedDateNotes);
+  }else if (time.includes("đến")) {
+    // Nếu time là khoảng ngày tùy chọn
+    const [startDate, endDate] = time.split(" đến ");
+    selectedDateNotes = filterNotesByCustomRange(noteData, startDate, endDate);
+    groupedNotes = groupNotesByDate(selectedDateNotes);
   }
+  
+
+  console.log(groupedNotes);
 
   const total = Object.keys(groupedNotes).reduce((acc, date) => {
     return acc + groupedNotes[date].total;

@@ -43,7 +43,7 @@ export default function UserSettingScreen() {
   const handleSave = async () => {
     setIsEditing(false);
     setData(false);
-    if (name === userData.username && email === userData.email) {
+    if (name === userData.username && email === userData.email && password === userData.password) {
       setData(true);
       return
     }
@@ -64,7 +64,7 @@ export default function UserSettingScreen() {
       });
 
       // Cập nhật mật khẩu
-      if (password) {
+      if (password !== userData.password) {
         await updatePassword(user, password);
       }
 

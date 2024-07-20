@@ -21,9 +21,9 @@ import { useChange } from "../context/ChangeContext";
 import { useFetchData } from "../hooks/useFetchData";
 import SwipeableItem from "../components/SwipeableItem";
 import { filterTodayNotes, groupNotesByDate } from "../global/functions";
-import * as Zendesk from 'react-native-zendesk-messaging-enhanced';
 
-const CHANNEL_KEY = 'YOUR_ZENDESK_CHANNEL_KEY';
+
+const CHANNEL_KEY = 'eyJzZXR0aW5nc191cmwiOiJodHRwczovL3BoZW5pa2FhLnplbmRlc2suY29tL21vYmlsZV9zZGtfYXBpL3NldHRpbmdzLzAxSjJURlYyTUdKVjBQTVZCNUtGS0JCQzFNLmpzb24ifQ==';
 
 const HomeScreen = ({ navigation }) => {
   const [isshow, setIsshow] = useState(false);
@@ -37,19 +37,19 @@ const HomeScreen = ({ navigation }) => {
   // Nhóm các ghi chú đã lọc theo ngày
   var groupedNotes = groupNotesByDate(todayNotes);
 
-  useEffect(() => {
-    Zendesk.initialize({ channelKey: CHANNEL_KEY })
-      .then(() => /* success */{})
-      .catch((error) => /* failure */{});
-  }, []);
+  // useEffect(() => {
+  //   Zendesk.initialize({ channelKey: CHANNEL_KEY })
+  //     .then(() => /* success */{})
+  //     .catch((error) => /* failure */{});
+  // }, []);
 
-  const handlePressOpenButton = () => {
-    Zendesk.openMessagingView();
-  };
+  // const handlePressOpenButton = () => {
+  //   Zendesk.openMessagingView();
+  // };
 
   const chatBotBtn = () => (
     <TouchableOpacity
-      onPress={() => handlePressOpenButton()}
+      // onPress={() => handlePressOpenButton()}
       style={{
         position: "absolute",
         bottom: 20,
@@ -58,10 +58,10 @@ const HomeScreen = ({ navigation }) => {
         height: 60,
       }}
     >
-      <Image
+      {/* <Image
         style={{ height: 60, width: 60, borderRadius: 30 }}
         source={require("../assets/chatbot.jpg")}
-      />
+      /> */}
     </TouchableOpacity>
   );
 

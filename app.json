@@ -14,24 +14,39 @@
         "ios": {
             "supportsTablet": true,
             "bundleIdentifier": "com.example.quanlychitieu",
-            "googleServicesFile": "./GoogleService-Info.plist"
+            "googleServicesFile": "./GoogleService-Info.plist",
+            "infoPlist": {
+                "NSFaceIDUsageDescription": "This app uses Face ID and Touch ID to verify your identity."
+            }
         },
         "android": {
             "adaptiveIcon": {
                 "foregroundImage": "./src/assets/welcome.jpg",
                 "backgroundColor": "#ffffff"
             },
-            "googleServicesFile": "./google-services.json"
+            "googleServicesFile": "./google-services.json",
+            "package": "com.example.quanlychitieu"
         },
         "web": {
             "favicon": "./src/assets/welcome.jpg"
         },
         "extra": {
             "googleAuth": {
-                "iosClientId": "YOUR_IOS_CLIENT_ID",
-                "androidClientId": "YOUR_ANDROID_CLIENT_ID",
-                "expoClientId": "YOUR_EXPO_CLIENT_ID"
+                "iosClientId": "987834799919-r1rcdqodfkdkirkdoanp30n4t5cr1pf4.apps.googleusercontent.com",
+                "androidClientId": "987834799919-r1rcdqodfkdkirkdoanp30n4t5cr1pf4.apps.googleusercontent.com",
+                "expoClientId": "987834799919-r1rcdqodfkdkirkdoanp30n4t5cr1pf4.apps.googleusercontent.com"
+            },
+            "eas": {
+                "projectId": "7a75701e-efd2-40f9-a803-f652f96f5766"
             }
-        }
+        },
+        "plugins": [
+            [
+                "expo-local-authentication",
+                {
+                    "faceIDPermission": "Allow NSFaceIDUsageDescription to use Face ID."
+                }
+            ]
+        ]
     }
 }

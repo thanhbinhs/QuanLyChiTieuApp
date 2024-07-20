@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   TextInput,
@@ -21,6 +21,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../../constants";
 import * as AppleAuthentication from "expo-apple-authentication";
+import * as Google from "expo-auth-session/providers/google";
+
+
+
+const androidClientId = '354317548303-qcca2p8gd42t45f9ge62hcjjsduhjpf1.apps.googleusercontent.com';
+const iosClientId = '354317548303-9hghhl2b4o3gj26agtj4flcf8kkvvsqt.apps.googleusercontent.com';
+
+
 
 const SignInScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -112,47 +120,50 @@ const SignInScreen = ({ navigation }) => {
     }
   };
 
-  const loginWithGoogle = async () => {
-    try {
-      // Cấu hình Google sign-in
-      const config = {
-        iosClientId: Constants.manifest.extra.googleAuth.iosClientId,
-        androidClientId: Constants.manifest.extra.googleAuth.androidClientId,
-        expoClientId: Constants.manifest.extra.googleAuth.expoClientId,
-      };
 
-      const result = await Google.logInAsync(config);
-
-      if (result.type === "success") {
-        const { idToken, accessToken, user } = result;
-        const provider = new OAuthProvider("google.com");
-        const googleCredential = provider.credential(idToken);
-
-        await signInWithCredential(FIREBASE_AUTH, googleCredential);
-
-        const userFirebase = FIREBASE_AUTH.currentUser;
-        const userDoc = FIRESTORE_DB.collection("users").doc(userFirebase.uid);
-        const userDocSnap = await userDoc.get();
-
-        if (!userDocSnap.exists) {
-          await userDoc.set({
-            email: user.email,
-            fullName: user.name,
-            role: "user",
-            createdAt: new Date(),
+  const loginWithGoogle = () => {
+    // Assuming iosClientId and androidClientId are defined elsewhere in your scope
+    const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
+      iosClientId: iosClientId,
+      androidClientId: androidClientId,
+    });
+  
+    useEffect(() => {
+      if (response?.type === 'success') {
+        const { authentication } = response;
+        const token = authentication?.accessToken;
+        console.log("accessToken", token);
+  
+        // Assuming `firebase.auth()` is already configured
+        const credential = firebase.auth.GoogleAuthProvider.credential(authentication.idToken);
+        firebase.auth().signInWithCredential(credential).then((result) => {
+          // Handle the signed-in user info.
+          const user = result.user;
+          const userDoc = firebase.firestore().doc(`users/${user.uid}`);
+  
+          userDoc.get().then((userDocSnap) => {
+            if (!userDocSnap.exists) {
+              userDoc.set({
+                email: user.email,
+                fullName: user.displayName,
+                role: "user",
+                createdAt: new Date(),
+              });
+            }
           });
-        }
-
-        navigation.reset({
-          index: 0,
-          routes: [{ name: "Main" }],
+  
+          navigation.reset({
+            index: 0,
+            routes: [{ name: "Main" }],
+          });
+  
+        }).catch((error) => {
+          console.error("Authentication error: ", error.message);
         });
-      } else {
-        console.log("Google sign-in cancelled");
       }
-    } catch (error) {
-      console.log("Authentication error: ", error.message);
-    }
+    }, [response]);
+  
+    return promptAsync;
   };
 
   return (
@@ -242,7 +253,7 @@ const SignInScreen = ({ navigation }) => {
                 </Text>
               )}
             </View>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={[styles.button, { backgroundColor: COLORS.black }]}
               onPress={loginWithApple}
             >
@@ -261,6 +272,7 @@ const SignInScreen = ({ navigation }) => {
 
             <TouchableOpacity
               style={[styles.button, { backgroundColor: COLORS.white }]}
+              onPress={loginWithGoogle}
             >
               <Ionicons
                 name="logo-google"
@@ -273,7 +285,7 @@ const SignInScreen = ({ navigation }) => {
                 }}
               />
               <Text style={{ textAlign: "center" }}>Đăng nhập bằng GOOGLE</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         ) : (
           <View

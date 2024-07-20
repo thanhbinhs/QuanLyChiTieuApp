@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect, useRef } from "react";
+import React, { Component, useState, useEffect, useRef, useContext, useCallback } from "react";
 import "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
 import {
@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useFocusEffect } from "@react-navigation/native";
 import SignInScreen from "./src/screens/authScreens/SignInScreen";
 import SignUpScreen from "./src/screens/authScreens/SignUpScreen";
 import HomeScreen from "./src/screens/HomeScreen";
@@ -44,6 +44,7 @@ import { useFetchData } from "./src/hooks/useFetchData";
 import { useChange } from "./src/context/ChangeContext";
 import { registerRootComponent } from "expo";
 import { gestureHandlerRootHOC } from "react-native-gesture-handler";
+import * as LocalAuthentication from "expo-local-authentication";
 
 registerRootComponent(gestureHandlerRootHOC(App));
 
@@ -51,6 +52,7 @@ LogBox.ignoreAllLogs(true);
 
 import Providers from "./src/context/Providers";
 import EditNoteScreen from "./src/screens/Add/EditNoteScreen";
+import SecurityContext from "./src/context/SecurityContext";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -777,10 +779,44 @@ const MainTabScreen = () => {
   );
 };
 
+const SecurityContextConsumer = () => {
+  const { isAuthenEnabled } = useContext(SecurityContext);
+
+  const authenticate = async () => {
+    const hasHardware = await LocalAuthentication.hasHardwareAsync();
+    const supportedTypes = await LocalAuthentication.supportedAuthenticationTypesAsync();
+    if (hasHardware && supportedTypes.includes(LocalAuthentication.AuthenticationType.FACIAL_RECOGNITION)) {
+      const result = await LocalAuthentication.authenticateAsync({
+        promptMessage: 'Xác thực để truy cập',
+        fallbackLabel: 'Sử dụng mật khẩu'
+      });
+
+      if (result.success) {
+        Alert.alert('Xác thực thành công');
+      } else {
+        Alert.alert('Xác thực thất bại');
+      }
+    } else {
+      Alert.alert('Thiết bị không hỗ trợ FaceID');
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      if (isAuthenEnabled) {
+        authenticate();
+      }
+    }, [isAuthenEnabled])
+  );
+
+  return null;
+};
+
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [userDocId, setUserDocId] = useState(null);
   
+
 
   useEffect(() => {
     const checkUserDocId = async () => {
@@ -804,6 +840,7 @@ export default function App() {
   return (
     <Providers>
       <NavigationContainer>
+      {/* <SecurityContextConsumer> */}
         <Stack.Navigator initialRouteName="Loading">
           <Stack.Screen
             name="Loading"
@@ -836,7 +873,10 @@ export default function App() {
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
+      {/* </SecurityContextConsumer> */}
       </NavigationContainer>
     </Providers>
   );
 }
+
+

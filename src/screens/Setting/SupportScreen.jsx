@@ -8,14 +8,10 @@ export default function SupportScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Support Screen</Text>
       <Text style={styles.description}>
-        If you need help, please contact our support team.
+        Thông tin liên hệ với bộ phận hỗ trợ của chúng tôi.
       </Text>
-      <Button
-        title="Contact Support"
-        onPress={handleContactSupport}
-      />
+      <Text>Phone: 0376416543</Text>
     </View>
   );
 }
@@ -23,8 +19,7 @@ export default function SupportScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    marginTop:120,
     padding: 16,
     backgroundColor: '#f8f8f8',
   },

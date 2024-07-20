@@ -1,11 +1,14 @@
 import React from 'react';
 import { ChangeProvider,useChange } from './ChangeContext';
+import {SecurityProvider} from './SecurityContext';
 
 const Providers = ({ children }) => {
   return (
-      <ChangeProvider>
+    <SecurityProvider>
+      <ChangeProvider> 
         {children}
       </ChangeProvider>
+    </SecurityProvider>
   );
 };
 

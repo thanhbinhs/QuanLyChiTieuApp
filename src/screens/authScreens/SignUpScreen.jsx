@@ -184,7 +184,7 @@ const SignupScreen = ({ navigation }) => {
                 </Text>
               )}
           </View>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={[styles.button, { backgroundColor: COLORS.black }]}
           >
             <Ionicons
@@ -214,7 +214,7 @@ const SignupScreen = ({ navigation }) => {
               }}
             />
             <Text style={{ textAlign: "center" }}>Đăng ký bằng GOOGLE</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       ) : (
         <View

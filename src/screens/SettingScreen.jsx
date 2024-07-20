@@ -28,10 +28,6 @@ export default function SettingScreen({navigation}) {
       <View style={styles.itemCenter}>
         <Image source={{uri: "https://xsgames.co/randomusers/avatar.php?g=male"}} style={styles.avatar}/>
       </View>
-      <View style={styles.flexRow}>
-        <Ionicons name="search" size={28} color="#ccc" />
-        <Text style={{fontSize:18, color:'#ccc'}}>Search</Text>
-      </View>
 
       <View style={[styles.flexRow,{flexDirection:'column', alignItems:'flex-start', padding:0}]}>
         <TouchableOpacity style={styles.row} onPress={() => navigation.navigate("UserSetting")}>

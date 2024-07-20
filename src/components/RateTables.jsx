@@ -27,9 +27,7 @@ export default function RateTables() {
     <>
       <View style={styles.headerBox}>
         <Text style={styles.headerTitle}>Tra cứu tỉ giá</Text>
-        <TouchableOpacity>
-          <Ionicons name="settings" size={24} color={COLORS.grey} />
-        </TouchableOpacity>
+
       </View>
 
       <View style={styles.table}>

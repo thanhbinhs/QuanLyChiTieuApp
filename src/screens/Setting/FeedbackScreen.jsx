@@ -16,16 +16,15 @@ export default function FeedbackScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Feedback</Text>
       <TextInput
         style={styles.input}
         multiline
-        placeholder="Enter your feedback here"
+        placeholder="Viết phản hồi của bạn ở đây..."
         value={feedback}
         onChangeText={setFeedback}
       />
       <Button
-        title="Send Feedback"
+        title="Gửi đi"
         onPress={handleSendFeedback}
       />
     </View>
