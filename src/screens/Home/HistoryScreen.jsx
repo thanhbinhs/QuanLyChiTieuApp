@@ -23,6 +23,7 @@ import {
   filterNotesByDate,
   filterNotesByWeek,
   filterNotesByMonth,
+  filterNotesByCustomRange,
 } from "../../global/functions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FIRESTORE_DB } from "../../components/FirebaseConfig";
@@ -34,16 +35,24 @@ export default function HistoryScreen({ navigation }) {
   const [data, setData] = useState(true);
   const { userData, noteData, accountData, loading, error } =
     useFetchData(change);
-
   const [time, setTime] = useState("Hôm nay");
   const [show, setShow] = useState(false);
   const [selectedItemId, setSelectedItemId] = useState(null);
 
+  console.log("time", time);
  if (time === "Hôm nay") {
     const todayNotes = filterTodayNotes(noteData);
     // Nhóm các ghi chú đã lọc theo ngày
     var groupedNotes = groupNotesByDate(todayNotes);
-  } else if (/\d{4}-\d{2}-\d{2}/.test(time)){
+  } else if(time.includes("đến")){
+    // Nếu time là khoảng ngày tùy chọn
+    const [startDate, endDate] = time.split(" đến ");
+    selectedDateNotes = filterNotesByCustomRange(noteData, startDate, endDate);
+    console.log("selectedDateNotes", selectedDateNotes);
+    groupedNotes = groupNotesByDate(selectedDateNotes);
+  }
+  else if (/\d{4}-\d{2}-\d{2}/.test(time)){
+    console.log("nhảy sau");
     const selectedDateNotes = filterNotesByDate(noteData, time);
     // Nhóm các ghi chú đã lọc theo ngày
     var groupedNotes = groupNotesByDate(selectedDateNotes);
@@ -58,13 +67,7 @@ export default function HistoryScreen({ navigation }) {
     const [year, month] = time.split('-').map(Number);
     selectedDateNotes = filterNotesByMonth(noteData, year, month);
     groupedNotes = groupNotesByDate(selectedDateNotes);
-  }else if (time.includes("đến")) {
-    // Nếu time là khoảng ngày tùy chọn
-    const [startDate, endDate] = time.split(" đến ");
-    selectedDateNotes = filterNotesByCustomRange(noteData, startDate, endDate);
-    groupedNotes = groupNotesByDate(selectedDateNotes);
   }
-  
 
   console.log(groupedNotes);
 
