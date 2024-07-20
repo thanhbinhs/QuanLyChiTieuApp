@@ -25,6 +25,10 @@ import vib from "../assets/images/logobank/VIB.jpg";
 import vietabank from "../assets/images/logobank/vietabank.jpg";
 import vietbank from "../assets/images/logobank/vietbank.jpg";
 import chatbot from "../assets/chatbot.jpg"
+import sacombank from "../assets/images/logobank/sacombank.png"
+import bvb from "../assets/images/logobank/bvb.png"
+import gpbank from "../assets/images/logobank/gpbank.jpg"
+
 
 export default {
   wallet,
@@ -56,4 +60,7 @@ export default {
   vietabank,
   vietbank,
   chatbot,
+  sacombank,
+  bvb,
+  gpbank
 };
