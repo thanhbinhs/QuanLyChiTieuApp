@@ -2,12 +2,12 @@ import { View, Text, TextInput, StyleSheet, TouchableWithoutFeedback } from 'rea
 import React, { useState, useRef } from 'react'
 import { COLORS } from '../constants'
 
-export default function BalanceInput({ type, onNumberChange }) {
+export default function BalanceInput({ type, onNumberChange, initialValue }) {
 
   const textInputRef = useRef(null);
   const color = type === 'Chi tiền' ? COLORS.red : COLORS.green;
 
-  let [number, setNumber] = useState(0);
+  let [number, setNumber] = useState(initialValue);
 
   const handleChangeText = (text) => {
     // Chỉ giữ lại các ký tự số

@@ -102,10 +102,7 @@ export default function AddScreen() {
       <>
 
         <StatusBar style="auto" />  
-        <View style={[styles.header, { paddingTop: headerHeight, paddingBottom: 5, flexDirection:'row', justifyContent:'space-between' }]}>
-        <TouchableOpacity style={{ paddingLeft: 15 }}>
-              <Ionicons name='search' size={24} color={COLORS.white} />
-            </TouchableOpacity>
+        <View style={[styles.header, { paddingTop: headerHeight, paddingBottom: 5, flexDirection:'row'}]}>
                 <TouchableOpacity onPress={toggleModal} style={{ width: '40%', height: 32, backgroundColor: "#00BFF0", borderRadius: 20, flexDirection: 'row', justifyContent: 'center', alignItems: "center" }}>
                   <Text style={{ color: COLORS.white, fontSize: 16, fontWeight: '700', marginRight: 5 }}>{type}</Text>
                   <Ionicons name="caret-down" size={16} color={COLORS.white} />
@@ -123,16 +120,14 @@ export default function AddScreen() {
                     </TouchableOpacity>
                   </View>
                 </Modal>
-                <TouchableOpacity style={{ paddingRight: 15 }}>
-              <Ionicons name='filter' size={24} color={COLORS.white} />
-            </TouchableOpacity>
+
               </View>
               {data ? (
               <ScrollView >
-              <BalanceInput type={type} onNumberChange={handleNumberChange}/>
+              <BalanceInput type={type} onNumberChange={handleNumberChange} initialValue={0}/>
               <SizedBox/>
-              <TypeChooses type={type} onItemChange={handleTypeNoteChange} data="type"/>
-              <TypeChooses type={type} onItemChange={handleAccountChange} data="account"/>
+              <TypeChooses type={type} onItemChange={handleTypeNoteChange} data="type" initialValue={0}/>
+              <TypeChooses type={type} onItemChange={handleAccountChange} data="account" initialValue={0}/>
               <SubmitButton handleSubmit={handleSubmit} />
               </ScrollView> 
       ):(

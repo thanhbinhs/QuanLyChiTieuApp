@@ -9,12 +9,12 @@ import { useChange } from '../context/ChangeContext';
 import { useFetchData } from '../hooks/useFetchData';
 
 
-export default function TypeChooses({ type, onItemChange, data }) {
+export default function TypeChooses({ type, onItemChange, data, initialValue }) {
   const { change } = useChange();
   const { userData, noteData, accountData, loading, error } = useFetchData(change);
   const [title, setTitle] = useState('Chọn hạng mục');
   const [showMenu, setShowMenu] = useState(false);
-  const [item, setItem] = useState('');
+  const [item, setItem] = useState(initialValue);
 
   const handleItemChange = useCallback((newItem) => {
     setItem(newItem);

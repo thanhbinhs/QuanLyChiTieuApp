@@ -108,7 +108,7 @@ export default function AddAccountScreen({ navigation }) {
     setItemId(1);
 
     setSuccess(true);
-    Alert.alert('Ghi chú thành công');
+    Alert.alert('Thêm tài khoản thành công');
     setChange(!change);
   }
 

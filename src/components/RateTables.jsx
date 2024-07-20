@@ -27,7 +27,6 @@ export default function RateTables() {
     <>
       <View style={styles.headerBox}>
         <Text style={styles.headerTitle}>Tra cứu tỉ giá</Text>
-
       </View>
 
       <View style={styles.table}>

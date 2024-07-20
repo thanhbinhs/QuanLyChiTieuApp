@@ -27,10 +27,7 @@ export default function AccountScreen({ navigation }) {
   const { userData, noteData, accountData, loading, error } =
     useFetchData(change);
 
-  const total = useMemo(() => {
-    return accountData.reduce((total, account) => total + account.balance, 0);
-  }, [accountData]);
-
+  // Memoized values for different account types
   const accountMoney = useMemo(() => {
     return accountData.filter((account) => account.accountType === "Tiền mặt");
   }, [accountData]);
@@ -53,7 +50,15 @@ export default function AccountScreen({ navigation }) {
     );
   }, [accountData]);
 
+  // Calculate the total balance across all accounts
+  const total = useMemo(() => {
+    return accountData.reduce((total, account) => total + account.balance, 0);
+  }, [accountData]);
+
   const headerHeight = useHeaderHeight();
+
+  // Check if all listings are empty
+  const allAccountsEmpty = accountMoney.length === 0 && accountBank.length === 0 && accountWallet.length === 0 && accountCredit.length === 0;
 
   return (
     <>
@@ -73,10 +78,18 @@ export default function AccountScreen({ navigation }) {
       </View>
       <SizedBox />
       <ScrollView>
-        <ViewAccounts listings={accountMoney} title="Tiền mặt" navigation={navigation}/>
-        <ViewAccounts listings={accountBank} title="Tài khoản ngân hàng" navigation={navigation}/>
-        <ViewAccounts listings={accountWallet} title="Ví điện tử" navigation={navigation}/>
-        <ViewAccounts listings={accountCredit} title="Thẻ tín dụng" navigation={navigation}/>
+        {allAccountsEmpty ? (
+          <View style={styles.container}>
+            <Text style={{fontSize:16}}>Nhấn dấu "+" để thêm tài khoản nhé ^^</Text>
+          </View>
+        ) : (
+          <>
+            <ViewAccounts listings={accountMoney} title="Tiền mặt" navigation={navigation}/>
+            <ViewAccounts listings={accountBank} title="Tài khoản ngân hàng" navigation={navigation}/>
+            <ViewAccounts listings={accountWallet} title="Ví điện tử" navigation={navigation}/>
+            <ViewAccounts listings={accountCredit} title="Thẻ tín dụng" navigation={navigation}/>
+          </>
+        )}
       </ScrollView>
       {Platform.OS === "android" ? (
         <TouchableWithoutFeedback
@@ -119,5 +132,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    padding: 20, // Adjust as needed
   },
 });

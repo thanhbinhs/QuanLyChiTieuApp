@@ -9,20 +9,9 @@ import {
     Alert,
   } from "react-native";
   import React, { useState, useRef } from "react";
-  import { useChange } from "../context/ChangeContext";
-  import { useFetchData } from "../hooks/useFetchData";
-  import { parseISO, format, set } from "date-fns";
   import { Entypo, Ionicons } from "@expo/vector-icons";
   import { COLORS } from "../constants";
-  import SizedBox from "../components/SizedBox";
-  import { ScrollView } from "react-native-gesture-handler";
-  import {
-    groupNotesByDate,
-    getDayOfWeekFromDateString,
-    filterCurrentMonthNotes,
-    filterCurrentWeekNotes,
-    filterTodayNotes,
-  } from "../global/functions";
+
   import AsyncStorage from "@react-native-async-storage/async-storage";
   import { FIRESTORE_DB } from "../components/FirebaseConfig";
   import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
@@ -115,7 +104,7 @@ const SwipeableItem = ({ item, setData, setChange, change, navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.actionButton, { backgroundColor: "blue" }]}
-            onPress={() => {navigation.navigate("EditNote", {item: item})}}
+            onPress={() => {navigation.navigate("EditNote", {noteId: item.noteId, accountId: item.accountId})}}
           >
             <Ionicons name="pencil-sharp" size={32} color="white" />
           </TouchableOpacity>

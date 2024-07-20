@@ -159,3 +159,13 @@ export const filterNotesByCustomRange = (notes, startDate, endDate) => {
     return isWithinInterval(noteDate, { start, end });
   });
 };
+
+// Hàm để lọc ghi chú theo phạm vi ngày
+export const filterByRange = (notes, selectedDates) => {
+  const selectedDays = Object.keys(selectedDates).map(dateString => new Date(dateString));
+
+  return notes.filter(note => {
+    const noteDate = timestampToDate(note.createdAt);
+    return selectedDays.some(day => format(noteDate, 'yyyy-MM-dd') === format(day, 'yyyy-MM-dd'));
+  });
+};

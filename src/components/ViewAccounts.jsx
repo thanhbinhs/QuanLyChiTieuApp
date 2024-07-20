@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -5,130 +6,150 @@ import {
   Dimensions,
   TouchableOpacity,
   ActivityIndicator,
-} from "react-native";
-import React, { useState } from "react";
-import { COLORS, logo } from "../constants";
-import { Ionicons } from "@expo/vector-icons";
-import ViewOptions from "./ViewOptions";
-import { useChange } from "../context/ChangeContext";
-import { useFetchData } from "../hooks/useFetchData";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { FIRESTORE_DB } from "./FirebaseConfig";
-import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
-import { useNavigation } from "@react-navigation/native";
+  StyleSheet,
+  Alert,
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
+import { doc, updateDoc, deleteDoc, getDoc } from 'firebase/firestore';
+import { FIRESTORE_DB } from './FirebaseConfig';
+import { COLORS, logo } from '../constants';
+import { useChange } from '../context/ChangeContext';
 
-export default function ViewAccounts({ listings, title, navigation }) {
+export default function ViewAccounts({ listings, title }) {
+  const navigation = useNavigation();
   const { change, setChange } = useChange();
-
-  const widthScreen = Dimensions.get("window").width;
-  const heightScreen = Dimensions.get("window").height;
   const [selectedItemId, setSelectedItemId] = useState(null);
-  const [data, setData] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const deleteAccount = async (accountId, balance) => {
-    setData(false);
-    const userDocId = await AsyncStorage.getItem("userDocId");
+    setIsLoading(true);
+    const userDocId = await AsyncStorage.getItem('userDocId');
     const userDocRef = doc(FIRESTORE_DB, `users/${userDocId}`);
     const userData = await getDoc(userDocRef);
-    await updateDoc(userDocRef, { total: userData.data().total - balance });
-    await deleteDoc(
-      doc(FIRESTORE_DB, "users", userDocId, "account", accountId)
-    );
+
+    await updateDoc(userDocRef, {
+      total: userData.data().total - balance,
+    });
+    await deleteDoc(doc(FIRESTORE_DB, 'users', userDocId, 'account', accountId));
     setChange(!change);
-    setData(true);
+    setIsLoading(false);
+    Alert.alert('Xóa tài khoản thành công');
   };
+
+  if (listings.length === 0) return null; 
 
   return (
     <>
-      {data ? (
+      {isLoading ? (
+        <ActivityIndicator size="large" color={COLORS.primary} />
+      ) : (
         <View style={{ paddingHorizontal: 15, paddingTop: 10 }}>
-          <Text style={{ fontSize: 18, fontWeight: "600" }}>{title}</Text>
+          <Text style={{ fontSize: 18, fontWeight: '600' }}>{title}</Text>
           {listings.map((account, index) => (
-            <View
-              key={index}
-              style={{
-                flexDirection: "row",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-                paddingVertical: 5,
-              }}
-            >
-              <View style={{ paddingVertical: 10, flexDirection: "row" }}>
+            <View key={index} style={styles.accountContainer}>
+              <TouchableOpacity
+                style={styles.accountInfo}
+                onPress={() =>
+                  setSelectedItemId(
+                    account.accountId === selectedItemId ? null : account.accountId
+                  )
+                }
+              >
                 <Image
                   source={logo[account.accountImage]}
-                  style={{ width: 40, height: 40, borderRadius: 20 }}
+                  style={styles.accountImage}
                 />
-                <View style={{ marginLeft: 15 }}>
-                  <Text style={{ fontSize: 16 }}>{account.accountName}</Text>
-                  <Text style={{ fontSize: 16, fontWeight: "700" }}>
-                    {account.balance.toLocaleString("en-US")} VND
+                <View style={styles.accountDetails}>
+                  <Text style={styles.accountName}>{account.accountName}</Text>
+                  <Text style={styles.accountBalance}>
+                    {account.balance.toLocaleString('en-US')} VND
                   </Text>
                 </View>
-              </View>
-              <View
-                style={{
-                  width: widthScreen,
-                  height: 1,
-                  backgroundColor: "#ccc",
-                  position: "absolute",
-                  bottom: 0,
-                  right: -15,
-                }}
-              ></View>
+              </TouchableOpacity>
               {account.accountId === selectedItemId && (
-                <View
-                  style={{
-                    position: "absolute",
-                    right: 0,
-                    top: 50,
-                    backgroundColor: COLORS.white,
-                    padding: 10,
-                    paddingHorizontal: 20,
-                    zIndex: 100,
-                  }}
-                >
+                <View style={styles.optionsMenu}>
                   <TouchableOpacity
-                    style={{ paddingHorizontal: 10 }}
+                    style={styles.editButton}
                     onPress={() =>
-                      deleteAccount(account.accountId, account.balance)
-                    }
-                  >
-                    <Text>Xóa</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{
-                      marginTop: 10,
-                      borderTopColor: "#ccc",
-                      borderTopWidth: 1,
-                      paddingTop: 10,
-                      paddingHorizontal: 10,
-                    }}
-                    onPress={() =>
-                      navigation.navigate("EditAccount", { account: account })
+                      navigation.navigate('EditAccount', { account: account })
                     }
                   >
                     <Text>Sửa</Text>
                   </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.deleteButton}
+                    onPress={() => deleteAccount(account.accountId, account.balance)}
+                  >
+                    <Text>Xóa</Text>
+                  </TouchableOpacity>
                 </View>
               )}
               <TouchableOpacity
-                onPress={() => {
+                style={styles.optionsButton}
+                onPress={() =>
                   setSelectedItemId(
-                    account.accountId === selectedItemId
-                      ? null
-                      : account.accountId
-                  );
-                }}
+                    account.accountId === selectedItemId ? null : account.accountId
+                  )
+                }
               >
                 <Ionicons name="ellipsis-vertical" size={24} color="black" />
               </TouchableOpacity>
             </View>
           ))}
         </View>
-      ) : (
-        <ActivityIndicator size="large" color={COLORS.primary} />
       )}
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  accountContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 5,
+    borderBottomColor: '#ccc',
+    borderBottomWidth: 1,
+  },
+  accountInfo: {
+    flexDirection: 'row',
+    paddingVertical: 10,
+  },
+  accountImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+  },
+  accountDetails: {
+    marginLeft: 15,
+  },
+  accountName: {
+    fontSize: 16,
+  },
+  accountBalance: {
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  optionsMenu: {
+    flexDirection:'row',
+    backgroundColor: COLORS.white,
+    padding: 10,
+    paddingHorizontal: 20,
+
+  },
+  deleteButton: {
+    paddingHorizontal: 10,
+    marginLeft: 10,
+    paddingLeft: 10,
+  },
+  editButton: {
+    borderRightColor: COLORS.grey,
+    borderRightWidth: 1,
+    paddingHorizontal: 10,
+  },
+  optionsButton: {
+    padding: 10,
+  },
+});
