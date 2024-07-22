@@ -30,7 +30,6 @@ export default function UserSettingScreen() {
   const [password, setPassword] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [data, setData] = useState(true);
-  const f = false;
 
   useEffect(() => {
     if (userData) {
@@ -43,9 +42,24 @@ export default function UserSettingScreen() {
   const handleSave = async () => {
     setIsEditing(false);
     setData(false);
+
+    // Kiểm tra điều kiện mật khẩu
+    if (!password) {
+      Alert.alert("Thông báo", "Mật khẩu không được để trống.");
+      setData(true);
+      setPassword(userData.password)
+      return;
+    }
+    if (password.length < 8) {
+      Alert.alert("Thông báo", "Mật khẩu phải có ít nhất 8 ký tự.");
+      setData(true);
+      setPassword(userData.password)
+      return;
+    }
+
     if (name === userData.username && email === userData.email && password === userData.password) {
       setData(true);
-      return
+      return;
     }
 
     try {
@@ -66,6 +80,12 @@ export default function UserSettingScreen() {
       // Cập nhật mật khẩu
       if (password !== userData.password) {
         await updatePassword(user, password);
+      }
+
+      // Cập nhật email
+      if (email !== userData.email) {
+        await updateEmail(user, email);
+        await sendEmailVerification(user); // Gửi email xác minh mới
       }
 
       // Cập nhật Firestore
@@ -96,7 +116,7 @@ export default function UserSettingScreen() {
                 label="Email"
                 value={email}
                 onChange={setEmail}
-                isEditing={f}
+                isEditing={isEditing}
               />
               <UserInfoItem
                 label="Tên người dùng"
